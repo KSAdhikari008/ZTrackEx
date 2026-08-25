@@ -1,0 +1,2 @@
+-create branch named Planning Phase
+-start from dbdesign.md
