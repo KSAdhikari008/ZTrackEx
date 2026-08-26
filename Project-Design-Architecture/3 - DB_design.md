@@ -126,9 +126,9 @@ module.exports = mongoose.model("Budget", budgetSchema);
 
 # Note:
 
-## Constants
-** Since you're not using a monorepo-shared-constants setup necessarily, at minimum keep this list in one shared JS file on the backend (e.g. constants/categories.js) and import it into both schemas, rather than typing the array out twice. **
+## Category
 
+Taken enums array from constants.js in constants folder. Frontend gets the category for the for the dropdown from the this file as well throgh an api specific to this.More in 5 Folder_Structure.
 
 ## Calculating months for budget in db
 

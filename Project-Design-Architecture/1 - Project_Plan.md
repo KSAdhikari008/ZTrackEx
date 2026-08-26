@@ -21,6 +21,7 @@ Write a one-paragraph description of what the app does, then list features in tw
 - Export to CSV/PDF
 - Multi-currency support
 - Shared/group expenses
+- Oauth
 
 Beginners often try to build v2 features on day one. Resist that — get MVP working end-to-end first, then layer on.
 
@@ -69,6 +70,7 @@ A clean separation saves pain later. A common MERN layout:
 ```
 /server
   /config       (db connection, env setup)
+  /constants    (categories.js for enum of categories)
   /models       (Mongoose schemas)
   /routes       (route definitions)
   /controllers  (business logic)
