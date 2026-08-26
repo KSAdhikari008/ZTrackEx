@@ -12,6 +12,9 @@ Write a one-paragraph description of what the app does, then list features in tw
 - Basic dashboard (total spent, spent by category)
 
 **Nice-to-have (v2)**
+- rename username and password. make separate routes.
+- custome catogary feature by using separate category schema.
+- Budget per specific month (one document per user+category+month),Food, ₹5000, January 2025.Real history, can look back and see "what was my Food budget in March" accurately.
 - Budgets per category with alerts
 - Recurring expenses
 - Charts/analytics
