@@ -102,9 +102,11 @@ A few decisions worth making deliberately rather than defaulting into:
 
 - `.env` file for secrets (Mongo URI, JWT secret) — and `.gitignore` it immediately, before your first commit.
 - Separate configs for development vs production if you plan to deploy.
-- Set up nodemon for the backend and a basic error-handling middleware from day one, not bolted on later.
+- Set up nodemon for the backend and .
 
 ## 7. Think about error handling and edge cases upfront
+
+a basic error-handling middleware from day one, not bolted on later:
 
 Not in detail, but at least ask:
 - What happens if the user submits a negative amount?

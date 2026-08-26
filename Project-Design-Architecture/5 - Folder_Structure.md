@@ -6,7 +6,7 @@
   /models       (Mongoose schemas)
   /routes       (route definitions)
   /controllers  (business logic)
-  /middleware   (auth, error handling)
+  /middleware   (auth, errorHandler.js)
   /utils
   server.js
 
