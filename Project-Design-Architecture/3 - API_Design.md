@@ -1,4 +1,4 @@
-## 3. Design your API before writing routes
+# API designs
 
 List your endpoints on paper first:
 
@@ -17,3 +17,12 @@ Decide your response shape and error format upfront, and keep it consistent ever
 { "success": true, "data": {...} }
 { "success": false, "message": "..." }
 ```
+
+## Auth - /api/auth
+
+POST   /register
+POST   /login
+
+## Expense - /api/expense
+
+GET /:userId

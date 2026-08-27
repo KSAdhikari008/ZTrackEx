@@ -121,7 +121,12 @@ You don't need to solve these now, but knowing they exist shapes how you write t
 - Commit early and often with meaningful messages.
 - Consider a simple branch strategy even solo (e.g., `main` + feature branches) — good habit for team projects later.
 
-## 9. Build order (once planning is done)
+## 9. Frontend design (basic wireframes)
+- Sketch the main pages (login, register, expense list, add/edit expense, dashboard) on paper or a tool like Figma. This helps you visualize the flow and avoid major redesigns later.
+
+
+
+## 10. Build order (once planning is done)
 
 A sensible order to actually build in:
 1. Backend: DB connection + User model + auth routes (register/login) — test with Postman/Thunder Client before any frontend exists
@@ -133,5 +138,3 @@ A sensible order to actually build in:
 Building and testing the backend fully via Postman before touching React is a huge time-saver — it isolates bugs instead of debugging frontend and backend simultaneously.
 
 ---
-
-Want me to help you sketch the actual Mongoose schemas and API route list next, or would you rather start with the folder scaffolding?
