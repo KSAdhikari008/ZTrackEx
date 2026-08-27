@@ -130,10 +130,11 @@ You don't need to solve these now, but knowing they exist shapes how you write t
 
 A sensible order to actually build in:
 1. Backend: DB connection + User model + auth routes (register/login) — test with Postman/Thunder Client before any frontend exists
-2. Backend: Expense model + CRUD routes — test these too
+2. Backend: Expense model + CRUD routes compelte all routes and data flow before moving to frontend — test these too using postman.
 3. Frontend: Auth pages, wire up to backend
-4. Frontend: Expense list + add/edit/delete, wire up to backend
-5. Dashboard/summary view last, once raw data flows are solid
+4. Frontend: Setup boiler for all pages,Expense list + add/edit/delete + dashboard analytics, wire up to backend
+5. Frontend: Learn ui libraries, create comps for all pages.
+6. Dashboard/summary view last, once raw data flows are solid
 
 Building and testing the backend fully via Postman before touching React is a huge time-saver — it isolates bugs instead of debugging frontend and backend simultaneously.
 
