@@ -11,10 +11,10 @@
 
 
 ### 1. Login page
-<img src="./2 - Login_page.png" alt="Project Screenshot" width="500">
+<img src="./2 - login-page.png" alt="Project Screenshot" width="500">
 
 ### 2. Register page
-<img src="./2 - Register_page.png" alt="Project Screenshot" width="500">
+<img src="./2 - register-page.png" alt="Project Screenshot" width="500">
 
 
 
@@ -29,7 +29,7 @@
 
 
 ### 4. Add expense (drawer)
-<img src="./4 - add_expense.png" alt="Project Screenshot" width="500">
+<img src="./4 - add-expense.png" alt="Project Screenshot" width="500">
 
 A few design choices worth calling out:
 
