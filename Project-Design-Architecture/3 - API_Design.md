@@ -25,4 +25,7 @@ POST   /login
 
 ## Expense - /api/expense
 
-GET /:userId
+GET /                    - get user expenses
+POST /                   - create new expense
+GET /:id                 - get single expense by id
+PATCH /:id               - update expense by id
