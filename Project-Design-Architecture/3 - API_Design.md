@@ -25,7 +25,20 @@ POST   /login
 
 ## Expense - /api/expense
 
-GET /                    - get user expenses
-POST /                   - create new expense
+GET /                    - all expenses , shown on expense list page with pagination or infinit scroll.
+GET /month               - expense so far this month
 GET /:id                 - get single expense by id
-PATCH /:id               - update expense by id
+POST /                   - add/create new expense (has category and update budget)
+PATCH /:id               - edit/update expense by id
+DELETE /:id              - delete by id
+
+
+## Budget - /api/budget
+
+GET /                    - monthlly budget
+GET /:id                 - budget by category id
+POST /                   - Create budget for a category
+PATCH /:id               - Edit budget
+DELETE /:id              - delete budget
+
+

@@ -6,7 +6,7 @@
 - Add/edit/delete expenses.
 - Categorize expenses (fixed category enum, not user-defined)
 - Filter by date range and category 
-- Basic budget per category with a visual warning when exceeded (e.g., red progress bar)
+- Basic budget per category with a visual warning when exceeded (e.g., red progress bar)(shown in a separate page/drawer not on the home page)
 - Dashboard with **one or two** charts (total by category — pie chart; spend over time — line/bar chart)
 - Pagination on the expense list
 

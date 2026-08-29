@@ -20,6 +20,13 @@
 
 ### 3. Dashboard page
 
+Shows:
+- Total spend this month ( at the top)
+- Budget left(monthly)
+- Top food category 
+- spending by catogery ( show in a bar with diff colors for every category)
+- a list of recent expenses 
+
 #### 3.1 Dashboard - mobile view
 <img src="./3 - home-page-mobile.png" alt="Project Screenshot" width="500">
 
@@ -41,7 +48,11 @@ A few design choices worth calling out:
 - One practical tip: use the same Dialog/Drawer component conditionally — shadcn doesn't auto-switch between them, so you'd use a media query hook (useMediaQuery or Tailwind's md: breakpoint logic) to render Drawer under ~768px and Dialog above it, while sharing the same form component inside both.
 
 
-### 5. Expenses list page (full page)
+### 5. Expenses list page
+
+*full page*
+*opens on clicking show all on recent expenses section on the home page*
+
 #### 5.1 Expenses list - mobile view
 ### 5.2 Expenses list - web view
 
@@ -53,3 +64,6 @@ A few design choices worth calling out:
 #### 7.1 Edit expense - mobile view
 #### 7.2 Edit expense - web view
 
+### 8. Budget Page 
+*not decided yet*
+*opens on clicking monthly budget section*
