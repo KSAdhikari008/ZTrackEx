@@ -10,8 +10,10 @@ Write a one-paragraph description of what the app does, then list features in tw
 - Categorize expenses (food, rent, travel, etc.)
 - View expenses in a list, filterable by date/category
 - Basic dashboard (total spent, spent by category)
+- number based pagination to show expense list
 
 **Nice-to-have (v2)**
+- ifinit scroll cursor based instead of pagination on expense list.
 - rename username and password. make separate routes.
 - custome catogary feature by using separate category schema.
 - Budget per specific month (one document per user+category+month),Food, ₹5000, January 2025.Real history, can look back and see "what was my Food budget in March" accurately.
@@ -71,7 +73,7 @@ A clean separation saves pain later. A common MERN layout:
 /server
   /config       (db connection, env setup)
   /constants    (categories.js for enum of categories)
-  /models       (Mongoose schemas)
+  /models       ( schemas)
   /routes       (route definitions)
   /controllers  (business logic)
   /middleware   (auth, error handling)

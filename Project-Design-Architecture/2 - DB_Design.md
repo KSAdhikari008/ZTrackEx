@@ -29,8 +29,9 @@ brain strom on data models on you own for the following features,  once settled 
 
 - budget:
     - user
-    - category
+    - category(null)(if null, then this doc represents total monthly budget.)
     - limit
+    - timestamp true
 
 ## Write schema on you own and then double check with the folowing claude given code. Wokd on the budget feature later ,just set it for now, make it workable only after expense and user routes(auth, vallidation and etc) and fronted layout plan  are finshed.
 
@@ -124,11 +125,10 @@ budgetSchema.index({ user: 1, category: 1 }, { unique: true });
 module.exports = mongoose.model("Budget", budgetSchema);
 
 
-# Note:
+# To-d0/NOTES:
 
 ## Category
-
-Taken enums array from constants.js in constants folder. Frontend gets the category for the for the dropdown from the this file as well throgh an api specific to this.More in 5 Folder_Structure.
+Taken enums array from constants.js in constants folder. Frontend gets the category for the for the dropdown from the this file as well throgh an api specific to this.More in 4 Folder_Structure.
 
 ## Calculating months for budget in db
 
