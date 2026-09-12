@@ -1,4 +1,4 @@
-- start with point 6 in project plan.
+- start with point 9 in project plan.
 
 - when in frontend-desing 
     - ask claude for login and register ui image.

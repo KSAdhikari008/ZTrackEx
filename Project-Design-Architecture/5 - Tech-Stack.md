@@ -1,4 +1,4 @@
-# Tech choices (PERN) 
+# Tech choices (MERN) 
 
 ### Client State management: 
 - Context API is enough for a project this size; probably don't need Redux.
