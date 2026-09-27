@@ -1,4 +1,5 @@
-- start with point 9 in project plan.
+# Finish the following quickly and start with point 10 in project plan. Setup a basic backend to practice hte frontend topics from PH-2 by making the Ph-2 project. Treat this as TrackEx V1 for now. Work around V1 will be more frontedn heavy , since we are in Ph-2.
+
 
 - when in frontend-desing 
     - ask claude for login and register ui image.

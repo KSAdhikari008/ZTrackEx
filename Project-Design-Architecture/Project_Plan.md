@@ -23,7 +23,8 @@ Write a one-paragraph description of what the app does, then list features in tw
 - Export to CSV/PDF
 - Multi-currency support
 - Shared/group expenses
-- Oauth
+- google Oauth
+- forget password
 
 Beginners often try to build v2 features on day one. Resist that — get MVP working end-to-end first, then layer on.
 

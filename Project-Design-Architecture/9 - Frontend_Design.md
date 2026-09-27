@@ -1,20 +1,23 @@
 # Frontend Design layout (basic wireframes )
 
-
 ## Application user flow
 
-<img src="./1 - app_flow.png" alt="Project Screenshot" width="500">
+<img src="../UI_Layout/1 - app_flow.png" alt="Project Screenshot" width="500">
 
 `` For MVP keep ui only for the available features, no need to work on the other features shown on the ui below, just the MVP features for now.``
 
 ## Pages wireframe
 
 
-### 1. Login page
-<img src="./2 - login-page.png" alt="Project Screenshot" width="500">
+### 1. Login/Register page
 
-### 2. Register page
-<img src="./2 - register-page.png" alt="Project Screenshot" width="500">
+#### Mobilei
+
+<img src="../UI_Layout/login_register_mobile.png" alt="Project Screenshot" width="500">
+
+#### Desktop
+
+<img src="../UI_Layout/login_register_desktop.png" alt="Project Screenshot" width="500">
 
 
 
@@ -28,15 +31,15 @@ Shows:
 - a list of recent expenses 
 
 #### 3.1 Dashboard - mobile view
-<img src="./3 - home-page-mobile.png" alt="Project Screenshot" width="500">
+<img src="../UI_Layout/3 - home-page-mobile.png" alt="Project Screenshot" width="500">
 
 #### 3.2 Dashboard - web view
-<img src="./3 - home-page-web.png" alt="Project Screenshot" width="500">
+<img src="../UI_Layout/3 - home-page-web.png" alt="Project Screenshot" width="500">
 
 
 
 ### 4. Add expense (drawer)
-<img src="./4 - add-expense.png" alt="Project Screenshot" width="500">
+<img src="../UI_Layout/4 - add-expense.png" alt="Project Screenshot" width="500">
 
 A few design choices worth calling out:
 
@@ -54,7 +57,10 @@ A few design choices worth calling out:
 *opens on clicking show all on recent expenses section on the home page*
 
 #### 5.1 Expenses list - mobile view
-### 5.2 Expenses list - web view
+<img src="../UI_Layout/5 - expenses-list-mobile.png" alt="Project Screenshot" width="500">
+
+#### 5.2 Expenses list - web view
+<img src="../UI_Layout/5 - expenses-list-web.png" alt="Project Screenshot" width="500">
 
 ### 6. Expense details page (not decided yet)
 #### 6.1 Expense details - mobile view
