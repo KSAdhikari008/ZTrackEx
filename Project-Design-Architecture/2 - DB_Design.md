@@ -2,12 +2,12 @@ brain strom on data models on you own for the following features,  once settled 
 
 
 - Auth (JWT-based) user only.
-- Add/edit/delete expenses
-- Categorize expenses (fixed category enum)
+- Done.Add/edit/delete expenses
+- Done.Categorize expenses (fixed category enum)
 - Filter by date range and category
 - Dashboard with **one or two** charts (total by category — pie chart; spend over time — line/bar chart)
 - Basic budget per category with a visual warning when exceeded (e.g., red progress bar)
-- Pagination on the expense list
+- Done.Pagination on the expense list
 
 
 ### Models:
@@ -37,6 +37,7 @@ brain strom on data models on you own for the following features,  once settled 
 
 
 ### Expense
+
 const mongoose = require("mongoose");
 
 const expenseSchema = new mongoose.Schema({
@@ -67,6 +68,9 @@ const expenseSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model("Expense", expenseSchema);
+
+#### Tips:
+- Default date to today in the UI so it doesn't add friction, but let users change it.
 
 
 ### user
