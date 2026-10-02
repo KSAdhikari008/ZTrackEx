@@ -20,8 +20,18 @@ Decide your response shape and error format upfront, and keep it consistent ever
 
 ## Auth - /api/auth
 
-POST   /register
-POST   /login
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/me         - A protected route that returns the logged-in user's own info, called on page load/refresh to check "is there a valid session right now?"
+
+#### V2
+
+Update username / Update password — PATCH /api/users/username, PATCH /api/users/password
+We already designed these earlier — technically these live more naturally under a /users route group than /auth, but they're auth-adjacent since password changes involve the same hashing concerns.
+
+Delete account — DELETE /api/users/me
+Lets a user delete their own account (and probably cascade-delete their Expenses/Budgets too, or you'd have orphaned data referencing a deleted user). Not strictly necessary for MVP, but a very common expectation in any real app with auth.
 
 ## Expense - /api/expenses
 
