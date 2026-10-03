@@ -30,6 +30,7 @@ const expenseSchema = new mongoose.Schema({
 
 },{timestamps: true});
 
+// Create an index on the user and date fields for efficient querying
 expenseSchema.index({user: 1, date: -1});
 
 export const Expense = mongoose.model('Expense', expenseSchema);

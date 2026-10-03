@@ -8,6 +8,7 @@ import expensesRouter from "./routes/expenses.routes.js";
 import budgetsRouter from "./routes/budgets.routes.js";
 import dashboardsRouter from "./routes/dashboards.routes.js";
 import categoriesRouter from "./routes/categories.routes.js";
+import usersRouter from "./routes/users.routes.js";
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/expenses",expensesRouter);
 app.use("/api/budgets",budgetsRouter);
 app.use("/api/dashboards",dashboardsRouter);
 app.use("/api/categories",categoriesRouter);
+app.use("/api/users",usersRouter);
 
 
 // app.post("/user", async(req,res)=>{

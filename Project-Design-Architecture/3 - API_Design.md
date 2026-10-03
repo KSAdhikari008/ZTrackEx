@@ -25,7 +25,11 @@ POST   /api/auth/login
 POST   /api/auth/logout
 GET    /api/auth/me         - A protected route that returns the logged-in user's own info, called on page load/refresh to check "is there a valid session right now?"
 
-#### V2
+## Users - /api/users
+
+PATCH /api/users/username
+PATCH /api/users/password
+DELETE /api/users/me
 
 Update username / Update password — PATCH /api/users/username, PATCH /api/users/password
 We already designed these earlier — technically these live more naturally under a /users route group than /auth, but they're auth-adjacent since password changes involve the same hashing concerns.
