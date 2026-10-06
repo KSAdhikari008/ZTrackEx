@@ -1,9 +1,13 @@
 import { User } from "../models/user.model.js";
-
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
 async function registerUser(req,res){
     
     try{
+
+        // put validators
+
         const {username, email, password} = req.body;
 
         //check if user already exists.
@@ -20,31 +24,53 @@ async function registerUser(req,res){
             })
         }
 
-        //hash pswd
+        const hash = await bcrypt.hash(password,10);
 
 
-        // create user
         const user = await User.create({
             username,
             email,
-            password
+            password: hash
         })
-        // send res
-        res.json({
-            message: "User created successfully",
-            user
+
+        const token = jwt.sign({
+            id: user._id,
+        },process.env.JWT_SECRET);
+
+
+        res.cookie('TrackEx_token',token,{
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            maxAge: 1000*60*60*24*7
+        })
+
+       
+        return res.status(201).json({
+            message: "User created successfully"
         })
 
     }catch(err){
-        res.json({
-            message: err.message
+
+        if (err.code === 11000) {
+            return res.status(409).json({
+                message: "Email or username already exists."
+            });
+        }
+
+        return res.status(500).json({
+            message: "Internal Server Error: " + err.message
         })
     }
 
 }
 
 async function loginUser(req,res){
+    try{
 
+    }catch(err){
+        
+    }
 }
 
 async function logoutUser(req,res){
