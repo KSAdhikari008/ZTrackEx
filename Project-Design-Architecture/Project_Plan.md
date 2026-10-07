@@ -13,6 +13,7 @@ Write a one-paragraph description of what the app does, then list features in tw
 - number based pagination to show expense list
 
 **Nice-to-have (v2)**
+- rate limiting on endpoint.
 - ifinit scroll cursor based instead of pagination on expense list.
 - rename username and password. make separate routes.
 - custome catogary feature by using separate category schema.

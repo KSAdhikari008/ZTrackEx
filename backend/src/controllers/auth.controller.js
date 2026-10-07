@@ -1,16 +1,14 @@
 import { User } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
+import { matchedData } from "express-validator";
 import jwt from 'jsonwebtoken'
 
 async function registerUser(req,res){
     
     try{
 
-        // put validators
+        const {username, email, password} = matchedData(req);
 
-        const {username, email, password} = req.body;
-
-        //check if user already exists.
         const alreadyRegistered = await User.findOne({
             $or: [
                 {email},
@@ -52,6 +50,7 @@ async function registerUser(req,res){
 
     }catch(err){
 
+        // handle err thrown by .create() during race condition.
         if (err.code === 11000) {
             return res.status(409).json({
                 message: "Email or username already exists."
