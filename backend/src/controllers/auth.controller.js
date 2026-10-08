@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { matchedData } from "express-validator";
 import jwt from 'jsonwebtoken'
 import { JWT_EXPIRES_IN, JWT_SALT } from "../config/jwt.js";
-import { COOKIE_NAME, cookieOptions } from "../config/cookie.js";
+import { authCookieOptions, baseCookieOptions, COOKIE_NAME,  } from "../config/cookie.js";
 
 // Hash of a random string, generated once at startup. Used in Login controller.
 // Used to keep res timing consistent for when the user doesn't exist or when the pswd doesn't match.
@@ -43,7 +43,7 @@ async function registerUser(req,res){
             {expiresIn: JWT_EXPIRES_IN}
         );
 
-        res.cookie(COOKIE_NAME, token, cookieOptions)
+        res.cookie(COOKIE_NAME, token, authCookieOptions)
        
         return res.status(201).json({
             message: 'User created successfully.',
@@ -74,7 +74,7 @@ async function loginUser(req,res){
                 {email: identifier.toLowerCase()}, // emails in DB are in lowercase.
                 {username: identifier}
             ]
-        })
+        })        
 
         // Run bcrypt, even if the user doesn't exist so there no diff in res time.
         const isPswdCorrect = await bcrypt.compare(password, user ? user.password : DUMMY_HASH) 
@@ -90,7 +90,7 @@ async function loginUser(req,res){
             {expiresIn: JWT_EXPIRES_IN}
         )
 
-        res.cookie(COOKIE_NAME, token, cookieOptions)
+        res.cookie(COOKIE_NAME, token, authCookieOptions)
 
         return res.status(200).json({
             message: "Logged in successfully.",
@@ -108,12 +108,26 @@ async function loginUser(req,res){
 }
 
 async function logoutUser(req,res){
+    try{
+    
+        res.clearCookie(COOKIE_NAME,baseCookieOptions);
 
+        return res.status(200).json({
+            message: "Logged Out successfully."
+        })
+    }catch(err){
+        console.log("Logout error: ",err)
+        return res.status(500).json({message: 'Something went wrong.'})
+    }
 }
 
 async function getLoggedInUser(req,res){
-    res.json({
-        message: "haha"
+   
+    return res.status(200).json({
+        message: "User is logged in.",
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email
     })
 }
 
