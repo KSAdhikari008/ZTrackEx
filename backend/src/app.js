@@ -30,7 +30,6 @@ app.use("/api/dashboards",dashboardsRouter);
 app.use("/api/categories",categoriesRouter);
 app.use("/api/users",usersRouter);
 
-
 // app.post("/user", async(req,res)=>{
 
 //   const {username, email, password} = req.body;
