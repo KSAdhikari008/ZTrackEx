@@ -1,9 +1,28 @@
 import { Link } from "react-router";
+import { register } from "../services/authService";
 
 function Register() {
-  function handleRegistration(e) {
+
+
+  async function handleRegistration(e) {
     e.preventDefault();
-    console.log("somesome");
+
+    // returns a returns a FormData object, not a normal JS obj. 
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try{
+      const response = await register(data);
+      console.log(response.data);
+
+    }catch(err){
+      if(err.status === 400){
+        const validationErrors = err.response?.data?.errors;
+        const alertMsg = validationErrors.map(e => `${e.field}: ${e.message} \n`).join('');
+        alert(alertMsg);
+      }
+      console.error(err);
+    }
   }
 
   return (
@@ -26,6 +45,7 @@ function Register() {
             type="text"
             name="username"
             placeholder="John Doe"
+            required
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
           <div className="email mb-2 pl-1 text-zinc-200 ">Email</div>
@@ -33,6 +53,7 @@ function Register() {
             type="email"
             name="email"
             placeholder="john@example.com"
+            required
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
           <div className="pswd mb-2 pl-1 text-zinc-200 ">Password</div>
@@ -40,6 +61,7 @@ function Register() {
             type="password"
             name="password"
             placeholder="••••••••"
+            required
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-2 "
           />
           <div className="pswdFormat font-light text-sm/snug text-zinc-400 ">

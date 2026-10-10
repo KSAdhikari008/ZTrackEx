@@ -41,10 +41,7 @@
 - Whether you keep frontend/backend in one repo (monorepo) or two separate repos is up to you — for a solo MVP, one repo with two folders is simpler to manage.
 
 ## /services:
-The services/ folder (sometimes called api/ instead) is where you put the actual functions that talk to your backend — one function per API call, organized by resource.
-
-
-- lib/api.js on the frontend — centralize your fetch calls here (getExpenses(), createExpense(), getDashboardSummary()) rather than scattering fetch() calls inside components. Makes it trivial to add auth headers, handle errors consistently, or swap base URLs between dev/prod.
+The services/ folder (sometimes called api/ instead) is where you put the actual functions that talk to your backend — one function per API call, organized by resource. Centralize your fetch calls here (getExpenses(), createExpense(), getDashboardSummary()) rather than scattering fetch() calls inside components. Makes it trivial to add auth headers, handle errors consistently, or swap base URLs between dev/prod.
 
 
 ### Example:
