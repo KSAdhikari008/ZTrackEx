@@ -1,27 +1,34 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { register } from "../services/authService";
 
 function Register() {
 
+  const navigate = useNavigate();
 
   async function handleRegistration(e) {
     e.preventDefault();
 
-    // returns a returns a FormData object, not a normal JS obj. 
+    // returns a returns a FormData object, not a normal JS obj.
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
-    try{
-      const response = await register(data);
-      console.log(response.data);
+    try {
+      await register(data); 
+      // replace current history and redirect. 
+      navigate('/',{replace: true}); 
 
-    }catch(err){
-      if(err.status === 400){
+    } catch (err) {
+
+      if (err.status === 400) {
         const validationErrors = err.response?.data?.errors;
-        const alertMsg = validationErrors.map(e => `${e.field}: ${e.message} \n`).join('');
+        const alertMsg = validationErrors.map((e) => `${e.field}: ${e.message} \n`).join("") || [];
         alert(alertMsg);
+
+      } else if (err.status === 409) {
+        alert(err.response?.data?.message);
+      } else {   
+        console.error(err);
       }
-      console.error(err);
     }
   }
 
@@ -46,6 +53,8 @@ function Register() {
             name="username"
             placeholder="John Doe"
             required
+            minLength={3}
+            maxLength={20}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
           <div className="email mb-2 pl-1 text-zinc-200 ">Email</div>
@@ -54,6 +63,7 @@ function Register() {
             name="email"
             placeholder="john@example.com"
             required
+            maxLength={254}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
           <div className="pswd mb-2 pl-1 text-zinc-200 ">Password</div>
@@ -62,6 +72,8 @@ function Register() {
             name="password"
             placeholder="••••••••"
             required
+            minLength={8}
+            maxLength={64}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-2 "
           />
           <div className="pswdFormat font-light text-sm/snug text-zinc-400 ">
