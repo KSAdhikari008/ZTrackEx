@@ -17,21 +17,23 @@ function Register() {
     setFormErrors([])
     setLoading(true)
 
-    // returns a FormData object, not a normal JS obj.
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
+    
     try {
+      
+      // returns a FormData object, not a normal JS obj.
+      const formData = new FormData(e.target)
+      const data = Object.fromEntries(formData.entries())
 
-      await register(data); 
+      await register(data)
       // replace current history and redirect. 
-      navigate('/',{replace: true}); 
+      navigate('/',{replace: true})
 
     } catch (err) {
 
       
       if(err.response) {   // Server responded with an HTTP error.
-        const status = err.response?.status;
+        const status = err.response.status
+        const message = err.response.data?.message
 
         if (status === 400) {
           const validationErrors = err.response?.data?.errors;
@@ -43,20 +45,20 @@ function Register() {
           }
         } else if (status === 409) {  // name/email already in use
 
-          setFormErrors([err.response?.data?.message]);
-        } else if (status === 500) {
-          setFormErrors(["Server error. Try again later."]);
+          setFormErrors([message]);
+        } else if (status >= 500) {
+          setFormErrors(["Server error. Please try again later."]);
           console.error(err);
         } else {
           setFormErrors([
-            err.response?.data?.message ||
+            message ||
               "Registration failed. Please try again.",
           ]);
         }
       }else if(err.request){   // Request was sent, but no response was received.
-        setFormErrors(["No reponse from the server."]);
+        setFormErrors([ "No response from the server. Check your connection."]);
       }else{        // Error occurred while setting up the request.
-        setFormErrors(['Something went wrong. Unable to send request.'])
+        setFormErrors(['Something went wrong. Please try again.'])
       }
     }finally{
       setLoading(false);
@@ -81,29 +83,38 @@ function Register() {
         </div>
     
         <form onSubmit={handleRegistration} className="form my-5 ">
-          <div className="fullname mb-2 pl-1 text-zinc-200 ">Username</div>
+          <label className="fullname mb-2 pl-1 text-zinc-200 " htmlFor="username">
+            Username
+          </label>
           <input
             type="text"
             name="username"
+            id="username"
             placeholder="John Doe"
             required
             minLength={3}
             maxLength={20}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
-          <div className="email mb-2 pl-1 text-zinc-200 ">Email</div>
+          <label className="email mb-2 pl-1 text-zinc-200 " htmlFor="email">
+            Email
+          </label>
           <input
             type="email"
             name="email"
+            id="email"
             placeholder="john@example.com"
             required
             maxLength={254}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
-          <div className="pswd mb-2 pl-1 text-zinc-200 ">Password</div>
+          <label className="pswd mb-2 pl-1 text-zinc-200 " htmlFor="password">
+            Password
+          </label>
           <input
             type="password"
             name="password"
+            id="password"
             placeholder="••••••••"
             required
             minLength={8}
@@ -131,7 +142,7 @@ function Register() {
             className=" rounded-md h-12 w-full  mt-5 mb-2 border-amber-400   bg-white text-black font-medium text-[20px] hover:cursor-pointer hover:bg-zinc-50 hover:border-3 hover:disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:border-none "
             disabled={loading}
           >
-            Create account
+            { loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
         <div className="loginOption text-center text-zinc-300 ">
