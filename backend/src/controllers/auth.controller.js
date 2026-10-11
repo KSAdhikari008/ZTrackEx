@@ -2,12 +2,12 @@ import { User } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 import { matchedData } from "express-validator";
 import jwt from 'jsonwebtoken'
-import { JWT_EXPIRES_IN, JWT_SALT } from "../config/jwt.js";
+import { JWT_EXPIRES_IN, SALT_ROUNDS } from "../config/jwt.js";
 import { authCookieOptions, baseCookieOptions, COOKIE_NAME,  } from "../config/cookie.js";
 
 // Hash of a random string, generated once at startup. Used in Login controller.
 // Used to keep res timing consistent for when the user doesn't exist or when the pswd doesn't match.
-const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', JWT_SALT)
+const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', SALT_ROUNDS)
 
 async function registerUser(req,res){
     
@@ -28,7 +28,7 @@ async function registerUser(req,res){
             })
         }
 
-        const hash = await bcrypt.hash(password,JWT_SALT);
+        const hash = await bcrypt.hash(password,SALT_ROUNDS);
 
 
         const user = await User.create({
