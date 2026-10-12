@@ -65,7 +65,6 @@ function Register() {
     }
   }
 
-  // console.log(formErrors);
 
   return (
     <div className="container box-border  text-white bg-black h-screen w-screen flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">

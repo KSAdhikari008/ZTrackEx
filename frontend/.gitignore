@@ -23,6 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
 # custom
 
 To-do.md

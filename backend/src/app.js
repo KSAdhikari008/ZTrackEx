@@ -15,7 +15,9 @@ const app = express();
 
 //Middlewares
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin:  process.env.NODE_ENV === "development"
+        ?   process.env.ORIGIN_URL
+        :   process.env.ORIGIN_URL_PROD,
     credentials: true
 }));
 app.use(express.json());
