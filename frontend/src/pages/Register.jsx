@@ -67,7 +67,7 @@ function Register() {
 
 
   return (
-    <div className="container box-border  text-white bg-black min-h-dvh w-screen flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">
+    <div className="container box-border  text-white bg-black h-dvh w-screen flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">
       <div className="brandSection  text-[#f8a50b]  font-mono tracking-tight box-border p-2 px-4 font-bold text-3xl border-4 border-zinc-600 rounded-lg ">
         <div className="brand">TrackEx</div>
       </div>
