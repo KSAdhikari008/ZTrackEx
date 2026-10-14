@@ -15,17 +15,22 @@ function Register() {
     if(loading) return
 
     setFormErrors([])
+    // returns a FormData object, not a normal JS obj.
+    const formData = new FormData(e.target)
+    const data = Object.fromEntries(formData.entries())
+
+    if (data.password !== data.confirmPassword) {
+      setFormErrors(["Passwords do not match."])
+      return
+    }
+
     setLoading(true)
 
-    
     try {
-      
-      // returns a FormData object, not a normal JS obj.
-      const formData = new FormData(e.target)
-      const data = Object.fromEntries(formData.entries())
-
-      await register(data)
-      // History replacement: navigate('/', { replace: true }) correctly prevents the back button from returning to a completed registration form. 
+      // eslint-disable-next-line no-unused-vars
+      const { confirmPassword, ...payload } = data
+      await register(payload)
+      // replace current history and redirect. 
       navigate('/',{replace: true})
 
     } catch (err) {
@@ -71,7 +76,7 @@ function Register() {
       <div className="brandSection  text-[#f8a50b]  font-mono tracking-tight box-border p-2 px-4 font-bold text-3xl border-4 border-zinc-600 rounded-lg ">
         <div className="brand">TrackEx</div>
       </div>
-      <div className="fromContainer box-border border-4 border-zinc-600 rounded-lg p-5 ">
+      <div className="formContainer box-border border-4 border-zinc-600 rounded-lg p-5 ">
         <div className="headings ">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-100  ">
             Your finances, organized.
@@ -90,6 +95,7 @@ function Register() {
             name="username"
             id="username"
             placeholder="John Doe"
+            autoComplete="username"
             required
             minLength={3}
             maxLength={20}
@@ -103,6 +109,7 @@ function Register() {
             name="email"
             id="email"
             placeholder="john@example.com"
+            autoComplete="email"
             required
             maxLength={254}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
@@ -115,15 +122,31 @@ function Register() {
             name="password"
             id="password"
             placeholder="••••••••"
+            autoComplete="new-password"
             required
             minLength={8}
             maxLength={64}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-2 "
           />
-          <div className="pswdFormat font-light text-sm/snug text-zinc-400 ">
+          <div className="pswdFormat font-light text-sm/snug text-zinc-400 mb-3 ">
             At least 8 characters with uppercase, lowercase, and special
             characters
           </div>
+
+          <label className="confirmPswd mb-2 pl-1 text-zinc-200 " htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            placeholder="••••••••"
+            autoComplete="new-password"
+            required
+            minLength={8}
+            maxLength={64}
+            className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
+          />
 
 
           {
