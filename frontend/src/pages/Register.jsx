@@ -25,7 +25,7 @@ function Register() {
       const data = Object.fromEntries(formData.entries())
 
       await register(data)
-      // replace current history and redirect. 
+      // History replacement: navigate('/', { replace: true }) correctly prevents the back button from returning to a completed registration form. 
       navigate('/',{replace: true})
 
     } catch (err) {
