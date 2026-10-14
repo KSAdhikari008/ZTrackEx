@@ -30,8 +30,8 @@ function Register() {
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...payload } = data
       await register(payload)
-      // replace current history and redirect. 
-      navigate('/',{replace: true})
+      // Redirect to / ,replace history entry so navigatig backwards to register in not allowed.
+      navigate('/', { replace: true })
 
     } catch (err) {
 
@@ -44,7 +44,7 @@ function Register() {
           const validationErrors = err.response?.data?.errors;
 
           if (Array.isArray(validationErrors)) {
-            setFormErrors(validationErrors.map((e) => `${e.message}`));
+            setFormErrors(validationErrors.map((e) => e.message));
           } else {
             setFormErrors(["Please check your registration details."]);
           }
@@ -87,7 +87,7 @@ function Register() {
         </div>
     
         <form onSubmit={handleRegistration} className="form my-5 ">
-          <label className="fullname mb-2 pl-1 text-zinc-200 " htmlFor="username">
+          <label className="fullname inline-block mb-1 pl-1 text-zinc-200 " htmlFor="username">
             Username
           </label>
           <input
@@ -101,7 +101,7 @@ function Register() {
             maxLength={20}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
-          <label className="email mb-2 pl-1 text-zinc-200 " htmlFor="email">
+          <label className="email inline-block mb-1 pl-1 text-zinc-200 " htmlFor="email">
             Email
           </label>
           <input
@@ -114,7 +114,7 @@ function Register() {
             maxLength={254}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-3 "
           />
-          <label className="pswd mb-2 pl-1 text-zinc-200 " htmlFor="password">
+          <label className="pswd inline-block mb-1 pl-1 text-zinc-200 " htmlFor="password">
             Password
           </label>
           <input
@@ -128,12 +128,12 @@ function Register() {
             maxLength={64}
             className="border-2 border-zinc-400 rounded-md h-10 w-full box-border py-5 px-3 mb-2 "
           />
-          <div className="pswdFormat font-light text-sm/snug text-zinc-400 mb-3 ">
+          <div className="pswdFormat font-light text-sm/snug text-zinc-400 mb-2 ">
             At least 8 characters with uppercase, lowercase, and special
             characters
           </div>
 
-          <label className="confirmPswd mb-2 pl-1 text-zinc-200 " htmlFor="confirmPassword">
+          <label className="confirmPswd inline-block mb-1 pl-1 text-zinc-200 " htmlFor="confirmPassword">
             Confirm Password
           </label>
           <input
