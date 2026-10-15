@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router";
 import { login } from "../services/authService";
 import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
+
 
 function Login() {
   const [loading, setLoading] = useState(false);
@@ -64,8 +66,17 @@ function Login() {
 
   return (
     <div className="container box-border text-white bg-black min-h-dvh w-screen flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">
-      <div className="brandSection text-[#f8a50b] font-mono tracking-tight box-border p-2 px-4 font-bold text-3xl border-4 border-zinc-600 rounded-lg ">
+      <div className="brandSection text-[#f8a50b] flex justify-between items-center md:flex-col font-mono tracking-tight box-border p-2 px-4 font-bold text-3xl border-4 border-zinc-600 rounded-lg  ">
         <div className="brand">TrackEx</div>
+        <a
+          href="https://github.com/KSAdhikari008/ZTrackEx"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub Repository"
+          className="text-white hover:text-amber-400 transition-colors"
+        >
+          <FaGithub className="md:mb-2 text-2xl md:text-3xl" />
+        </a>
       </div>
       <div className="formContainer box-border border-4 border-zinc-600 rounded-lg p-5 ">
         <div className="headings ">
