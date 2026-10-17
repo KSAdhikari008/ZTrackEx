@@ -14,7 +14,7 @@ function ProtectedRoute() {
                 const user = await authMe();
                 setStatus({status:'authenticated', user});
             } catch (err) {
-                console.err(err.response?.data?.message);
+                console.log(err.response?.data?.message);
                 setStatus({status:'not authenticated', user:null});        
             }
             
