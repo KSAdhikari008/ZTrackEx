@@ -1,31 +1,32 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { logout } from "../services/authService";
 import { useAuth } from "../hooks/authHook";
 
 function Home() {
 
   const navigate  = useNavigate();
-  const user = useAuth();
+  const {user, setUser} = useAuth();
 
   async function logoutUser(){
     try{
       await logout();
       alert('user logged out');
+      setUser({status: 'loading'});
       navigate('/login');      
     }catch(err){
       console.log(err);
     }
   }
 
-  console.log(user.body);
+  console.log(user);
 
   return (
     <>
       <h1>HOME PAGE</h1>
-      <h2>Welcom back {user.body.username}</h2>
-      <Link to="/register">Register</Link>
+      <h2>Welcom back {user.username}</h2>
       <p>{user.status} </p>
       <button onClick={logoutUser}>logout</button>
+      {/* <Link to="/register">Register</Link> */}
     </>
   );
 }

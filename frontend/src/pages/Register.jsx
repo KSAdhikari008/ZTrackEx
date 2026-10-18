@@ -1,14 +1,22 @@
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { register } from "../services/authService";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import { useAuth } from "../hooks/authHook";
 
 function Register() {
 
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState([]);
 
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
+
+  // for logged in users accessing /login url.
+  if (user.status === "authenticated") {
+    return <Navigate to="/" />;
+  }
+
 
   async function handleRegistration(e) {
     e.preventDefault()
@@ -30,7 +38,9 @@ function Register() {
     try {
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...payload } = data
-      await register(payload)
+      const response = await register(payload)
+      const user = {status: 'authenticated', ...response.data?.user};
+      setUser(user);
       // Redirect to / ,replace history entry so navigatig backwards to register in not allowed.
       navigate('/', { replace: true })
 

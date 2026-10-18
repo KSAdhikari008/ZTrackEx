@@ -13,12 +13,12 @@ export function AuthProvider({children}){
 
             try{
                 const response = await authMe();
-                const body = response.data;
-                setUser({status: "authenticated", body});
+                const body = response.data.user;
+                setUser({status: "authenticated", ...body});
             }catch(err){
                 if(err.response){
-                    console.log(err);
-                    setUser({status: "authenticattion failed", body: null})
+                    console.log(err.response?.data?.message);
+                    setUser({status: 'authentication failed'})
                 }else{
                     console.log(err);
                 }
@@ -30,6 +30,6 @@ export function AuthProvider({children}){
 
 
 
-    return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={{user, setUser}}>{children}</AuthContext.Provider>
 }
 

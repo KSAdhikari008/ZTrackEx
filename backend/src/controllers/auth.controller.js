@@ -125,9 +125,11 @@ async function getLoggedInUser(req,res){
    
     return res.status(200).json({
         message: "User is logged in.",
-        id: req.user.id,
-        username: req.user.username,
-        email: req.user.email
+        user:{
+            id: req.user.id,
+            username: req.user.username,
+            email: req.user.email
+        }
     })
 }
 

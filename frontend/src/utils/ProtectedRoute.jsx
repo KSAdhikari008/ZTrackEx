@@ -3,14 +3,15 @@ import { useAuth } from "../hooks/authHook";
 
 function ProtectedRoute() {
  
-    const user = useAuth();
+    const {user} = useAuth();
   
     if(user.status === 'loading'){
         return <p>Checking authentication...</p>
     }
 
-    if(user.status === 'authenticattion failed'){
-        return <Navigate to="/login" />
+    if(user.status === 'authentication failed'){
+      console.log(user.status);
+      return <Navigate to="/login" />
     }
 
   return (

@@ -1,14 +1,21 @@
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { login } from "../services/authService";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import { useAuth } from "../hooks/authHook";
 
 
 function Login() {
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState([]);
 
+  const {user, setUser} = useAuth();
   const navigate = useNavigate();
+
+  // for logged in users accessing /login url.
+  if(user.status === 'authenticated'){
+    return <Navigate to='/' />
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -27,7 +34,9 @@ function Login() {
     setLoading(true);
 
     try {
-      await login({ identifier, password });
+      const response  = await login({ identifier, password });
+      const user = {status: 'authenticated', ...response.data?.user};
+      setUser(user);
       // Redirect to /, replace history entry so navigating backwards to login is not allowed.
       navigate("/", { replace: true });
     } catch (err) {
