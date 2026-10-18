@@ -1,23 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { logout } from "../services/authService";
+import { useAuth } from "../hooks/authHook";
 
 function Home() {
 
   const navigate  = useNavigate();
-
-  /* useEffect runs after the initial render. If this is a protected route, a better approach is to put the authentication check in a ProtectedRoute component or an authentication context, rather than repeating it on every page.
- */
-  //  useEffect(()=>{
-
-  //    async function authUser() {
-  //       const user = await authMe();
-
-  //    }
-
-  //    authUser();
-
-  //  },[]);
-
+  const user = useAuth();
 
   async function logoutUser(){
     try{
@@ -29,10 +17,14 @@ function Home() {
     }
   }
 
+  console.log(user.body);
+
   return (
     <>
       <h1>HOME PAGE</h1>
+      <h2>Welcom back {user.body.username}</h2>
       <Link to="/register">Register</Link>
+      <p>{user.status} </p>
       <button onClick={logoutUser}>logout</button>
     </>
   );

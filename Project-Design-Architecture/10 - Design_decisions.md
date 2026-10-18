@@ -1,3 +1,11 @@
+
+# Features
+
+## Protected Routes
+
+## Link navigation security
+
+
 **External links: `rel="noopener noreferrer"`**
 **Decision:** All external links that open in a new tab (such as the GitHub repo link on the login page) use `target="_blank"` together with `rel="noopener noreferrer"`.
 
