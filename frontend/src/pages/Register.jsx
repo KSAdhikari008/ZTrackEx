@@ -1,4 +1,4 @@
-import { Link, Navigate, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { register } from "../services/authService";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -11,12 +11,9 @@ function Register() {
 
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
 
-  // Redirect to intended protected page or /
-  const redirectPath = location.state?.from?.pathname || "/";
-
+  // while authCheck in AuthProvider resolves.
   if(user.status === 'loading'){
     return (
       <div className="container box-border text-white bg-black min-h-dvh w-full flex items-center justify-center">
@@ -25,9 +22,9 @@ function Register() {
     );
   }
 
-  // for logged in users accessing /register url.
+  // for logged in users accessing /register url..
   if (user.status === "authenticated") {
-    return <Navigate to={redirectPath} replace />;
+    return <Navigate to='/' replace />;
   }
 
 
@@ -52,8 +49,8 @@ function Register() {
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...payload } = data
       const response = await register(payload)
-      const user = {status: 'authenticated', ...response.data?.user};
-      setUser(user);
+      const userStatus = {status: 'authenticated', ...response.data?.user};
+      setUser(userStatus);
       // Redirect to / ,replace history entry so navigatig backwards to register in not allowed.
       navigate('/', { replace: true })
 
@@ -96,7 +93,7 @@ function Register() {
 
 
   return (
-    <div className="container box-border  text-white bg-black min-h-dvh w-screen flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">
+    <div className="container box-border  text-white bg-black min-h-dvh w-full flex flex-col justify-center gap-y-4 p-4 md:flex-row md:gap-10">
       <div className="brandSection text-[#f8a50b] flex justify-between items-center md:flex-col font-mono tracking-tight box-border p-2 px-4 font-bold text-3xl border-4 border-zinc-600 rounded-lg ">
         <div className="brand">TrackEx</div>
         <a
@@ -185,8 +182,8 @@ function Register() {
           {
             formErrors.length > 0 && (
               <div className="formErrors text-[#ff4d00f3] pt-2 text-sm  ">
-                {formErrors.map(err => (
-                  <p className=" pb-1 " key={err} >{err}</p>
+                {formErrors.map((err, i) => (
+                  <p className=" pb-1 " key={i} >{err}</p>
                 ))}
               </div>
             )
@@ -194,7 +191,7 @@ function Register() {
 
           <button
             type="submit"
-            className=" rounded-md h-12 w-full  mt-5 mb-2 border-amber-400   bg-white text-black font-medium text-[20px] hover:cursor-pointer hover:bg-zinc-50 hover:border-3 hover:disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:border-none "
+            className=" rounded-md h-12 w-full  mt-5 mb-2 border-amber-400   bg-white text-black font-medium text-[20px] hover:cursor-pointer hover:bg-zinc-50 hover:border-2 hover:disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:border-none "
             disabled={loading}
           >
             { loading ? 'Creating account...' : 'Create account'}

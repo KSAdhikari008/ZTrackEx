@@ -3,8 +3,8 @@ import { AuthContext } from "./authContext";
 import { authMe } from "../services/authService";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState({ status: "loading" });
 
+  const [user, setUser] = useState({ status: "loading" });
 
   // wrap in Callback and pass if checkAuth is needed to used in other comps as well.
   useEffect(() => {

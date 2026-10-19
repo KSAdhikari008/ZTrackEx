@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation, Navigate } from "react-router";
+import { Link, useLocation, Navigate } from "react-router";
 import { login } from "../services/authService";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -9,7 +9,6 @@ function Login() {
   const [formErrors, setFormErrors] = useState([]);
 
   const { user, setUser } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
 
   // Redirect to intended protected page or /
@@ -49,10 +48,13 @@ function Login() {
 
     try {
       const response = await login({ identifier: trimmedIdentifier, password });
-      const userData = { status: "authenticated", ...response.data?.user };
-      setUser(userData);
-      navigate(redirectPath, { replace: true });
+      
+      const userStatus = { status: "authenticated", ...response.data?.user };
+      setUser(userStatus);
+      // navigate(redirectPath, { replace: true });
+
     } catch (err) {
+
       if (err.response) {
         // Server responded with an HTTP error.
         const status = err.response.status;
@@ -166,7 +168,7 @@ function Login() {
 
         <div className="registerOption text-center text-zinc-300">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-400">
+          <Link to="/register" className="text-blue-400" replace >
             Sign up
           </Link>
           .

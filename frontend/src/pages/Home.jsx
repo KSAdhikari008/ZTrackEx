@@ -1,17 +1,16 @@
-import { useNavigate, Link, useLocation } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { logout } from "../services/authService";
 import { useAuth } from "../hooks/authHook";
 
 function Home() {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
-  const location = useLocation();
 
-  async function logoutUser() {
+  async function handleLogout() {
     try {
       await logout();
       setUser({ status: "unauthenticated" });
-      navigate("/login", { state: {from: location}, replace: true });
+      navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -22,7 +21,7 @@ function Home() {
       <h1>HOME PAGE</h1>
       <h2>Welcome back {user.username}</h2>
       <p>{user.status}</p>
-      <button onClick={logoutUser}>logout</button>
+      <button onClick={handleLogout}>logout</button>
       <p></p>
       <Link to='/login'>Login</Link>
     </div>
