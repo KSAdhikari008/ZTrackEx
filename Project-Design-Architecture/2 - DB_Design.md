@@ -1,6 +1,5 @@
 brain strom on data models on you own for the following features,  once settled then discuss with claude.
 
-
 - Auth (JWT-based) user only.
 - Done.Add/edit/delete expenses
 - Done.Categorize expenses (fixed category enum)
@@ -32,9 +31,6 @@ brain strom on data models on you own for the following features,  once settled 
     - category(null)(if null, then this doc represents total monthly budget.)
     - limit
     - timestamp true
-
-## Write schema on you own and then double check with the folowing claude given code. Wokd on the budget feature later ,just set it for now, make it workable only after expense and user routes(auth, vallidation and etc) and fronted layout plan  are finshed.
-
 
 ### Expense
 
