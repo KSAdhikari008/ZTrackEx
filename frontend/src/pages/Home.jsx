@@ -1,29 +1,44 @@
-import { useNavigate, Link } from "react-router";
-import { logout } from "../services/authService";
-import { useAuth } from "../hooks/authHook";
+import Navbar from "../component/Navbar";
+import './Home.css';
 
 function Home() {
-  const navigate = useNavigate();
-  const { user, setUser } = useAuth();
 
-  async function handleLogout() {
-    try {
-      await logout();
-      setUser({ status: "unauthenticated" });
-      navigate("/login");
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  }
+
 
   return (
-    <div>
-      <h1>HOME PAGE</h1>
-      <h2>Welcome back {user.username}</h2>
-      <p>{user.status}</p>
-      <button onClick={handleLogout}>logout</button>
-      <p></p>
-      <Link to='/login'>Login</Link>
+    <div className=" flex flex-col bg-black min-h-dvh p-2 text-zinc-50 md:flex-row  ">
+      <Navbar />
+      <main className=" md:flex-5  ">
+
+        <div className="montly-expense bg-zinc-800 px-3 py-2 "> 
+          <p>Total spent this month</p>
+          <div className="amount">$2148.30</div> 
+          <div className="vs-lastMonth text-amber-700 "> 12% vs last month</div>
+        </div>
+        <div className="budget-left  bg-zinc-800 px-3 py-2 ">
+          <p>Budget left</p>
+          <div className="amount">$651.70</div>
+        </div>
+        <div className="top-category  bg-zinc-800 px-3 py-2 ">
+          <p>Top category</p>
+          <div className="">Food</div>
+        </div>
+      <div className="category-spending  bg-zinc-800 px-3 py-2  ">
+          <p>Spending by category</p>
+          <div className="progress-bar">
+            <span>Food</span>
+            <span>Transport</span>
+            <span>Bills</span>
+            <span>Others</span>
+          </div>
+        </div>
+        <div className="recent-transactions  bg-zinc-800 px-3 py-2 ">
+          <p>Recent transactions</p>
+          <div className="t1">Whole foods -$54.20</div>
+          <div className="t2">Uber -$25.00</div>
+          <div className="t3">Starbucks -$10.50</div>
+        </div>
+      </main>
     </div>
   );
 }

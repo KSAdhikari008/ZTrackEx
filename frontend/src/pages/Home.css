@@ -1,0 +1,34 @@
+.monthly-expense{
+    grid-area: mon-exp;
+}
+.budget-left{
+    grid-area: bgt-lft;
+}
+.top-category{
+    grid-area: tp-cat;
+}
+.category-spending{
+    grid-area: cat-spnd;
+}
+.recent-transactions{
+    grid-area: rcnt-trns;
+}
+
+main{
+    display: grid;
+    grid-template-areas: 
+    "mon-exp mon-exp mon-exp mon-exp "
+    "mon-exp mon-exp mon-exp mon-exp "
+    "mon-exp mon-exp mon-exp mon-exp "
+    "bgt-lft bgt-lft tp-cat tp-cat "
+    "bgt-lft bgt-lft tp-cat tp-cat "
+    "cat-spnd cat-spnd cat-spnd cat-spnd "
+    "cat-spnd cat-spnd cat-spnd cat-spnd "
+    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    ;
+    gap: 5px;
+}
