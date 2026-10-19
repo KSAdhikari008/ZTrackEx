@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { register } from "../services/authService";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -11,10 +11,23 @@ function Register() {
 
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // for logged in users accessing /login url.
+
+  // Redirect to intended protected page or /
+  const redirectPath = location.state?.from?.pathname || "/";
+
+  if(user.status === 'loading'){
+    return (
+      <div className="container box-border text-white bg-black min-h-dvh w-full flex items-center justify-center">
+        <p className="animate-pulse text-zinc-400">Loading...</p>
+      </div>
+    );
+  }
+
+  // for logged in users accessing /register url.
   if (user.status === "authenticated") {
-    return <Navigate to="/" />;
+    return <Navigate to={redirectPath} replace />;
   }
 
 

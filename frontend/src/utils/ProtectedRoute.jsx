@@ -1,22 +1,24 @@
-import { Navigate, Outlet } from "react-router";
+import { Navigate, Outlet, useLocation } from "react-router";
 import { useAuth } from "../hooks/authHook";
 
 function ProtectedRoute() {
- 
-    const {user} = useAuth();
-  
-    if(user.status === 'loading'){
-        return <p>Checking authentication...</p>
-    }
+  const { user } = useAuth();
+  const location = useLocation();
 
-    if(user.status === 'authentication failed'){
-      console.log(user.status);
-      return <Navigate to="/login" />
-    }
+  if (user.status === "loading") {
+    return (
+      <div className="min-h-screen bg-black text-zinc-300 flex items-center justify-center">
+        <p className="animate-pulse text-lg">Checking authentication...</p>
+      </div>
+    );
+  }
 
-  return (
-    <Outlet/>
-  );
+  // Fail-closed guard: only allow entry if explicitly authenticated
+  if (user.status !== "authenticated") {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  return <Outlet />;
 }
 
 export default ProtectedRoute;

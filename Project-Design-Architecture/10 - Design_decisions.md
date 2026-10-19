@@ -13,3 +13,6 @@
 - **Security (`noopener`):** Without it, the opened page can access our app through `window.opener` and redirect the original tab to a malicious page (reverse tabnabbing). `noopener` removes that access.
 - **Privacy (`noreferrer`):** It stops the browser from sending the app's URL to the external site in the `Referer` header.
 - **Compatibility:** Modern browsers apply `noopener` by default for `target="_blank"`, but setting it explicitly protects older browsers and keeps the behavior consistent. It also satisfies common lint rules (e.g. `react/jsx-no-target-blank`).
+
+## replacing url history for login and register so backward nav is not allowed.
+## using location state to return back to the previous page when redirected form the accessed page.
