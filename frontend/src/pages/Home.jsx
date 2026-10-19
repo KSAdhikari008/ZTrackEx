@@ -14,6 +14,7 @@ function Home() {
     } catch (err) {
       console.error("Logout failed:", err);
     }
+    
   }
 
   return (
