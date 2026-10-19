@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import { Routes, Route } from 'react-router'
 import ProtectedRoute from './utils/ProtectedRoute';
+import Expenses from './pages/Expenses';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
             <Route path="/register" element={<Register/>} />
             <Route element={<ProtectedRoute/>}>
                 <Route path="/" element={<Home/>} />
+                <Route path="/expenses" element={<Expenses/>} />
             </Route>
         </Routes>
     );

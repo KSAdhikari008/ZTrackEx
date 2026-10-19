@@ -32,7 +32,7 @@ function Home() {
             <span>Others</span>
           </div>
         </div>
-        <div className="recent-transactions  bg-zinc-800 px-3 py-2 ">
+        <div className="recent-expenses  bg-zinc-800 px-3 py-2 ">
           <p>Recent transactions</p>
           <div className="t1">Whole foods -$54.20</div>
           <div className="t2">Uber -$25.00</div>

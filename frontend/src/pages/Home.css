@@ -10,8 +10,8 @@
 .category-spending{
     grid-area: cat-spnd;
 }
-.recent-transactions{
-    grid-area: rcnt-trns;
+.recent-expenses{
+    grid-area: rcnt-exp;
 }
 
 main{
@@ -24,11 +24,11 @@ main{
     "bgt-lft bgt-lft tp-cat tp-cat "
     "cat-spnd cat-spnd cat-spnd cat-spnd "
     "cat-spnd cat-spnd cat-spnd cat-spnd "
-    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
-    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
-    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
-    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
-    "rcnt-trns rcnt-trns  rcnt-trns rcnt-trns "
+    "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
+    "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
+    "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
+    "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
+    "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
     ;
     gap: 5px;
 }
