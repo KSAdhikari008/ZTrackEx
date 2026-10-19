@@ -30,5 +30,7 @@ main{
     "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
     "rcnt-exp rcnt-exp  rcnt-exp rcnt-exp "
     ;
-    gap: 5px;
+    gap: 10px;
+    /* border: 1px solid white; */
+    /* height: 100dvh; */
 }

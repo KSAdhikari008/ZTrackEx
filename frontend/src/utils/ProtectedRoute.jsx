@@ -8,7 +8,7 @@ function ProtectedRoute() {
   if (user.status === "loading") {
     return (
       <div className="min-h-screen bg-black text-zinc-300 flex items-center justify-center">
-        <p className="animate-pulse text-lg">Checking authentication...</p>
+        <p className="animate-pulse text-lg">Loading...</p>
       </div>
     );
   }

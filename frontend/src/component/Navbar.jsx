@@ -17,7 +17,7 @@ function Navbar() {
   }
  
   return (
-    <nav className=" rounded bg-zinc-800 flex justify-between px-3 py-2 md:flex-1 md:h-dvh ">
+    <nav className=" rounded bg-zinc-900 flex justify-between px-3 py-2 md:flex-1  ">
         <div className="left-section   ">
             <p className=" text-sm text-zinc-200">Good Morning</p>
             <h2 className=" text-md " >{user.username}</h2>
