@@ -9,7 +9,7 @@ import { authCookieOptions, baseCookieOptions, COOKIE_NAME,  } from "../config/c
 // Used to keep res timing consistent for when the user doesn't exist or when the pswd doesn't match.
 const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', SALT_ROUNDS)
 
-async function registerUser(req,res){
+async function registerUser(req,res,next){
     
     try{
 
@@ -59,12 +59,14 @@ async function registerUser(req,res){
             });
         }
         console.error('Register error:', err)
-        return res.status(500).json({ message: 'Something went wrong.' })
+        const forwardedError = new Error('Something went wrong.')
+        forwardedError.statusCode = 500
+        return next(forwardedError)
     }
 
 }
 
-async function loginUser(req,res){
+async function loginUser(req,res,next){
 
     try{
         const {identifier, password} = matchedData(req);
@@ -103,11 +105,13 @@ async function loginUser(req,res){
 
     }catch(err){
         console.error('Login error:', err)
-        return res.status(500).json({message: 'Something went wrong.'})
+        const forwardedError = new Error('Something went wrong.')
+        forwardedError.statusCode = 500
+        return next(forwardedError)
     }
 }
 
-async function logoutUser(req,res){
+async function logoutUser(req,res,next){
     try{
     
         res.clearCookie(COOKIE_NAME,baseCookieOptions);
@@ -117,7 +121,9 @@ async function logoutUser(req,res){
         })
     }catch(err){
         console.log("Logout error: ",err)
-        return res.status(500).json({message: 'Something went wrong.'})
+        const forwardedError = new Error('Something went wrong.')
+        forwardedError.statusCode = 500
+        return next(forwardedError)
     }
 }
 

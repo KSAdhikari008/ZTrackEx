@@ -29,6 +29,8 @@ export async function authenticate(req,res,next){
         }
 
         console.error('Auth error:', err)
-        return res.status(500).json({ message: 'Something went wrong.' })
+        const forwardedError = new Error('Something went wrong.')
+        forwardedError.statusCode = 500
+        return next(forwardedError)
     }
 }
