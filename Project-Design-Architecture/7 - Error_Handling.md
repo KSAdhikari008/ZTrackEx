@@ -1,5 +1,14 @@
 # 7. Error handling and edge cases.
 
+
+## Edge Cases
+
+Not in detail, but at least ask:
+- What happens if the user submits a negative amount?
+- What if they delete an expense that doesn't exist?
+- What if the token expires mid-session?
+
+
 Basic error-handling middleware from day one, not bolted on later:
 
 ### Error-handling middleware
@@ -65,39 +74,3 @@ const updateExpense = async (req, res, next) => {
     next(err);
   }
 };
-
-- Add some logic to recognize known error types(not custom thrown) and customize the response accordingly.
-
-const errorHandler = (err, req, res, next) => {
-  let statusCode = err.statusCode || 500;
-  let message = err.message || "Server Error";
-
-  // Mongoose bad ObjectId
-  if (err.name === "CastError") {
-    statusCode = 400;
-    message = "Invalid ID format";
-  }
-
-  // Mongoose duplicate key (unique field violation)
-  if (err.code === 11000) {
-    statusCode = 400;
-    message = `Duplicate value for ${Object.keys(err.keyValue)}`;
-  }
-
-  // Mongoose validation error
-  if (err.name === "ValidationError") {
-    statusCode = 400;
-    message = Object.values(err.errors).map(val => val.message).join(", "); // send according to what the frontend expects(array of error strings). 
-  }
-
-  res.status(statusCode).json({ success: false, message });
-};
-
-
-
-## Edge Cases
-
-Not in detail, but at least ask:
-- What happens if the user submits a negative amount?
-- What if they delete an expense that doesn't exist?
-- What if the token expires mid-session?

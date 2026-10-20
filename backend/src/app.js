@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { Expense } from "./models/expense.model.js";
-import { User } from "./models/user.model.js";
 import authRouter from "./routes/auth.routes.js";
 import expensesRouter from "./routes/expenses.routes.js";
 import budgetsRouter from "./routes/budgets.routes.js";
@@ -14,15 +12,12 @@ import { errorHandler } from "./middleware/errorHandler.js";
 const app = express();
 
 //Middlewares
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "development"
-        ? process.env.ORIGIN_URL
-        : process.env.ORIGIN_URL_PROD,
+app.use(cors({
+    origin:process.env.NODE_ENV === "development"
+            ? process.env.ORIGIN_URL
+            : process.env.ORIGIN_URL_PROD,
     credentials: true,
-  }),
-);
+  }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -35,6 +30,12 @@ app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/users", usersRouter);
 
+// 404 handler for undefined routes
+app.use((req, res, next)=>{
+  const forwardedError = new Error(`Can't find ${req.originalUrl} on this server!`);
+  forwardedError.statusCode = 404;
+  next(forwardedError);
+})
 
 app.use(errorHandler);
 

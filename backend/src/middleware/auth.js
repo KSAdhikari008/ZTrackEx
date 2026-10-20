@@ -29,7 +29,7 @@ export async function authenticate(req,res,next){
         }
 
         console.error('Auth error:', err)
-        const forwardedError = new Error('Something went wrong.')
+        const forwardedError = new Error('Something went wrong during authentication.')
         forwardedError.statusCode = 500
         return next(forwardedError)
     }

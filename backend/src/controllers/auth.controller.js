@@ -52,16 +52,16 @@ async function registerUser(req,res,next){
 
     }catch(err){
 
-        // handle err thrown by .create() during race condition.
+        // keep this err handler locally. All duplicate key err give the 11000 code.
+        // Then it can't be distinguished if it was .create() or some other operation.
         if (err.code === 11000) {
             return res.status(409).json({
                 message: "Email or username already in use."
             });
         }
+
         console.error('Register error:', err)
-        const forwardedError = new Error('Something went wrong.')
-        forwardedError.statusCode = 500
-        return next(forwardedError)
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 
 }
@@ -105,9 +105,7 @@ async function loginUser(req,res,next){
 
     }catch(err){
         console.error('Login error:', err)
-        const forwardedError = new Error('Something went wrong.')
-        forwardedError.statusCode = 500
-        return next(forwardedError)
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 }
 
@@ -121,9 +119,7 @@ async function logoutUser(req,res,next){
         })
     }catch(err){
         console.log("Logout error: ",err)
-        const forwardedError = new Error('Something went wrong.')
-        forwardedError.statusCode = 500
-        return next(forwardedError)
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 }
 
