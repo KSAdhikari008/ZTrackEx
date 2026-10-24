@@ -1,5 +1,10 @@
 # API designs
 
+- Response shape 
+
+ok - {message, data(expense/user etc)}
+failed - {message, errrors}
+
 List your endpoints on paper first:
 
 ```
