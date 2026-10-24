@@ -31,3 +31,6 @@ dist-ssr
 # custom
 
 To-do.md
+
+# Vitest reports and artifacts
+.vitest/

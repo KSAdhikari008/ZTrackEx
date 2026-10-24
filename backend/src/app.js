@@ -1,69 +1,42 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from 'cookie-parser';
-import { Expense } from "./models/expense.model.js";
-import { User } from "./models/user.model.js";
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import expensesRouter from "./routes/expenses.routes.js";
 import budgetsRouter from "./routes/budgets.routes.js";
 import dashboardsRouter from "./routes/dashboards.routes.js";
 import categoriesRouter from "./routes/categories.routes.js";
 import usersRouter from "./routes/users.routes.js";
-
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
 //Middlewares
 app.use(cors({
-    origin:  process.env.NODE_ENV === "development"
-        ?   process.env.ORIGIN_URL
-        :   process.env.ORIGIN_URL_PROD,
-    credentials: true
-}));
+    origin:process.env.NODE_ENV === "development"
+            ? process.env.ORIGIN_URL
+            : process.env.ORIGIN_URL_PROD,
+    credentials: true,
+  }));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //Routes
-app.use("/api/auth",authRouter);
-app.use("/api/expenses",expensesRouter);
-app.use("/api/budgets",budgetsRouter);
-app.use("/api/dashboards",dashboardsRouter);
-app.use("/api/categories",categoriesRouter);
-app.use("/api/users",usersRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/expenses", expensesRouter);
+app.use("/api/budgets", budgetsRouter);
+app.use("/api/dashboards", dashboardsRouter);
+app.use("/api/categories", categoriesRouter);
+app.use("/api/users", usersRouter);
 
-// app.post("/user", async(req,res)=>{
+// 404 handler for undefined routes
+app.use((req, res, next)=>{
+  const forwardedError = new Error(`Can't find ${req.originalUrl} on this server!`);
+  forwardedError.statusCode = 404;
+  next(forwardedError);
+})
 
-//   const {username, email, password} = req.body;
-
-//   const user = await User.create({
-//     username,
-//     email,
-//     password
-//   })
-
-//   res.json({
-//     message: "User created successfully",
-//     user
-//   })
-// })
-
-// app.post("/expense", async (req, res) => {
-
-//   const { title, amount, category, date, user } = req.body;
-
-//   const exp = await Expense.create({
-//     title,
-//     amount,
-//     category,
-//     date,
-//     user
-//   });
-
-//   res.json({
-//     message: "Expense created successfully",
-//     expense: exp
-//   });
-// });
+app.use(errorHandler);
 
 export default app;

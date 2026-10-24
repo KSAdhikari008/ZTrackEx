@@ -66,6 +66,24 @@ GET /api/categories      - gives enum categories from constant.js file, more on 
 # NOTE:
 
 ## api/expenses
+
+- check for when a user tries to access someoneelse's expense.
+
+ controller 2: user tries to edit someone else's expense
+const updateExpense = async (req, res, next) => {
+  try {
+    const expense = await Expense.findById(req.params.id);
+    if (expense.user.toString() !== req.user.id) {
+      const error = new Error("Not authorized to edit this expense");
+      error.statusCode = 403;
+      return next(error);
+    }
+    // ... update logic
+  } catch (err) {
+    next(err);
+  }
+};
+
 pagination api Example:-
 
     GET /api/expenses?page=1&limit=20&category=food&from=2026-08-01&to=2026-08-31&sort=date_desc

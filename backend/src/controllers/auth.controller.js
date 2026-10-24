@@ -9,7 +9,7 @@ import { authCookieOptions, baseCookieOptions, COOKIE_NAME,  } from "../config/c
 // Used to keep res timing consistent for when the user doesn't exist or when the pswd doesn't match.
 const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', SALT_ROUNDS)
 
-async function registerUser(req,res){
+async function registerUser(req,res,next){
     
     try{
 
@@ -52,19 +52,21 @@ async function registerUser(req,res){
 
     }catch(err){
 
-        // handle err thrown by .create() during race condition.
+        // keep this err handler locally. All duplicate key err give the 11000 code.
+        // Then it can't be distinguished if it was .create() or some other operation.
         if (err.code === 11000) {
             return res.status(409).json({
                 message: "Email or username already in use."
             });
         }
+
         console.error('Register error:', err)
-        return res.status(500).json({ message: 'Something went wrong.' })
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 
 }
 
-async function loginUser(req,res){
+async function loginUser(req,res,next){
 
     try{
         const {identifier, password} = matchedData(req);
@@ -103,11 +105,11 @@ async function loginUser(req,res){
 
     }catch(err){
         console.error('Login error:', err)
-        return res.status(500).json({message: 'Something went wrong.'})
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 }
 
-async function logoutUser(req,res){
+async function logoutUser(req,res,next){
     try{
     
         res.clearCookie(COOKIE_NAME,baseCookieOptions);
@@ -117,7 +119,7 @@ async function logoutUser(req,res){
         })
     }catch(err){
         console.log("Logout error: ",err)
-        return res.status(500).json({message: 'Something went wrong.'})
+        return next(Object.assign(new Error('Something went wrong'),{statusCode: 500}))
     }
 }
 

@@ -24,3 +24,6 @@ coverage/
 # Build output
 dist/
 build/
+
+# Vitest reports and artifacts
+.vitest/
