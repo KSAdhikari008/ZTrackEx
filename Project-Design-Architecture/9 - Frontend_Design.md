@@ -36,7 +36,9 @@ Shows:
 #### 3.2 Dashboard - web view
 <img src="../UI_Layout/3 - home-page-web.png" alt="Project Screenshot" width="500">
 
+#### Architecture
 
+- After user adds a new expense, it's shown in the recent expenses section, rather than in a modal/card. The user can then have the option to edit it right there if needed. For this reason there in no need to send expense if in res when an expense is added.
 
 ### 4. Add expense (drawer)
 <img src="../UI_Layout/4 - add-expense.png" alt="Project Screenshot" width="500">

@@ -1,26 +1,10 @@
 # API designs
 
-- Response shape 
 
-ok - {message, data(expense/user etc)}
-failed - {message, errrors}
-
-List your endpoints on paper first:
-
-```
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/expenses          (with query params: ?category=&from=&to=)
-POST   /api/expenses
-PUT    /api/expenses/:id
-DELETE /api/expenses/:id
-GET    /api/expenses/summary  (aggregated totals)
-```
-
-Decide your response shape and error format upfront, and keep it consistent everywhere, e.g.:
+## Response Shape
 ```json
-{ "success": true, "data": {...} }
-{ "success": false, "message": "..." }
+{ "message": "", "data": {...} }
+{ "message": "", "errors": [] }
 ```
 
 ## Auth - /api/auth
@@ -50,6 +34,25 @@ GET /:id                 - get single expense by id
 POST /                   - add/create new expense (has category and update budget)
 PATCH /:id               - edit/update expense by id
 DELETE /:id              - delete by id
+
+- **Amount property in Expense model stored as paisa in DB. No decimals for safer calculation**
+
+- **Date Handling**
+    - **User-provided date:** A date-only string like `"2026-10-24"` (formData in frontend) is parsed as midnight UTC: `2026-10-24T00:00:00.000Z` by the expenseValidator.
+    - **Default date:** In the expense schema `Date.now` stores the current timestamp, not midnight UTC. If the schema normalizes the default to UTC midnight, it stores the start of the current UTC day instead.
+
+- **Filtering expenses by date**
+    - An expense's `date` field may contain a time component, so use a range to retrieve all expenses for a specific UTC calendar day.
+    - For October 24, 2026:
+      ```js
+      date: {
+        $gte: new Date("2026-10-24T00:00:00.000Z"),
+        $lt: new Date("2026-10-25T00:00:00.000Z")
+      }
+      ```
+    - `$gte` includes midnight at the start of the day, while `$lt` excludes midnight at the start of the next day.
+    - This range works whether an expense's timestamp is midnight or another time during that UTC day.
+
 
 
 ## Budget - /api/budgets

@@ -10,7 +10,13 @@ export const getAllExpensesQueryValidator = [
     query('limit')
         .optional()
         .isInt({ min: 1, max: 100 }).withMessage('Limit must be an integer between 1 and 100').bail()
-        .toInt()
+        .toInt(),
+
+    query('date')
+        .optional()
+        .isISO8601().withMessage('Invalid date format').bail()
+        .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Date must be in YYYY-MM-DD format').bail()
+        .toDate()
 ];
 
 export const createExpenseValidator = [
@@ -27,7 +33,7 @@ export const createExpenseValidator = [
 
     body('date')
         .optional()
-        .isISO8601().withMessage('Invalid date').bail()
+        .isISO8601().withMessage('Invalid date format').bail()
         .toDate(),
 
     body('category')
