@@ -3,18 +3,6 @@ import Navbar from "../component/Navbar";
 import './Home.css';
 
 function Home() {
-  const navigate = useNavigate();
-  const { user, setUser } = useAuth();
-
-  async function handleLogout() {
-    try {
-      await logout();
-      setUser({ status: "unauthenticated" });
-      navigate("/login");
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  }
 
   return (
     <div className=" flex flex-col gap-2 bg-black min-h-dvh p-2 text-zinc-50 md:flex-row  ">
