@@ -1,8 +1,7 @@
 import { describe, test, vi, expect } from "vitest";
 import { getAllExpenses } from "../../../src/controllers/expenses.controller.js";
 import { Expense } from "../../../src/models/expense.model.js";
-import { ResultWithContextImpl } from "express-validator/lib/chain";
-
+import { getAllExpensesQueryValidator } from "../../../src/middleware/validators/expense.validator.js";
 
 describe("Test getAllExpenses controller:", ()=>{
 
@@ -11,12 +10,18 @@ describe("Test getAllExpenses controller:", ()=>{
         const req = { 
             user: { id: "user123"},
             query: {
-                page: 1, limit: 10
+                page: 1, limit: 15
             }
         };
 
+        // run validator so that matchData revieves the req data. 
+        for(const validator of getAllExpensesQueryValidator){
+            await validator.run(req);
+        }
+
         const filter = { user: req.user.id };
         const skipTest = (req.query.page - 1) * req.query.limit;    
+        
         const expenses = [
           {
             title: "Test Expense",
@@ -31,7 +36,7 @@ describe("Test getAllExpenses controller:", ()=>{
             date: new Date("2024-06-02")
           }
         ];
-        
+
         const query = {
             sort : vi.fn().mockReturnThis(),
             skip : vi.fn().mockReturnThis(),
@@ -39,6 +44,7 @@ describe("Test getAllExpenses controller:", ()=>{
             select : vi.fn().mockReturnValue(expenses)
         }
         const find = vi.spyOn(Expense, "find").mockReturnValue(query);
+       
 
         const res = {
             status: vi.fn().mockReturnThis(),
@@ -52,8 +58,6 @@ describe("Test getAllExpenses controller:", ()=>{
         expect(query.sort).toHaveBeenCalledWith({date: -1})
         expect(query.skip).toHaveBeenCalledWith(skipTest)
         expect(query.limit).toHaveBeenCalledWith(req.query.limit)
-        // expect(res.status).toHaveBeenCalledWith(200)
-
 
     })
 

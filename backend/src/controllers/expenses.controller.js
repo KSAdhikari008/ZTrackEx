@@ -26,7 +26,7 @@ export const getAllExpenses = async (req, res, next) => {
             .limit(limit)
             .select('title amount category date');
         
-        // convert amount to rupees
+        // convert the mongo doc to plain object and convert amount to rupees
         const formattedExpenses = expenses.map(ex => {
             const expense = ex.toObject();
             return {...expense, amount: expense.amount/100};
