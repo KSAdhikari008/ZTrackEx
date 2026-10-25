@@ -30,7 +30,7 @@ describe("authenticate middleware", () => {
   });
 
   test("return 401 when auth cookie is invalid or malformed", async () => {
-    // NOTE how [] returns here.
+
     const req = { cookies: { [COOKIE_NAME]: "invalid-token" } };
     const res = {
       status: vi.fn().mockReturnThis(),
