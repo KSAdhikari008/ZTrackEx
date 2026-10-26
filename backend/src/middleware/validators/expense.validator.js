@@ -19,7 +19,7 @@ export const getAllExpensesQueryValidator = [
         .toDate()
 ];
 
-export const createExpenseValidator = [
+export const addExpenseValidator = [
     body('title')
         .isString().withMessage('Invalid title').bail()
         .trim()
