@@ -15,7 +15,7 @@ export const getAllExpensesQueryValidator = [
     query('date')
         .optional()
         .isISO8601().withMessage('Invalid date format').bail()
-        .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Date must be in YYYY-MM-DD format').bail()
+        .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Date must be in YYYY-MM-DD format').bail() // that's how the react form sends it.
         .toDate()
 ];
 

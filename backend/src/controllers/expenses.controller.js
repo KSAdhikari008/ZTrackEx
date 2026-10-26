@@ -11,7 +11,7 @@ export const getAllExpenses = async (req, res, next) => {
         const filter = {user: id};
 
         if(date){
-            const start = date;
+            const start = date; // NOTE
             const end = new Date(date);
             end.setUTCDate(end.getUTCDate() + 1);
             filter.date = {

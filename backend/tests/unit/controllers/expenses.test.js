@@ -363,3 +363,8 @@ describe("getAllExpenses", () => {
     expect(res.json).not.toHaveBeenCalled();
   });
 });
+
+
+describe("addExpense", ()=>{
+  test.todo("test",async ()=>{})
+})
