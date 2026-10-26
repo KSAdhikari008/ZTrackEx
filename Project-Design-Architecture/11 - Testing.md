@@ -1,6 +1,6 @@
 ## 1. A practical testing strategy for TrackEx
 
-I would approach your project in this order:
+Approach in this order:
 1. Authentication and authorization
    
    Test missing/invalid authentication, successful authentication, role restrictions if applicable, and whether one user can access another user's data.
