@@ -491,7 +491,8 @@ describe("addExpense", ()=>{
       category: undefined,
     };
 
-    const create = vi.spyOn(Expense, 'create').mockRejectedValue(new Error("Database error"));
+    const error = new Error("Database error");
+    const create = vi.spyOn(Expense, 'create').mockRejectedValue(error);
 
     const res = {
       status: vi.fn().mockReturnThis(),
@@ -504,7 +505,7 @@ describe("addExpense", ()=>{
     expect(create).toHaveBeenCalledWith(expense)
     expect(res.status).not.toHaveBeenCalled()
     expect(res.json).not.toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith(error)
 
   })
 });
