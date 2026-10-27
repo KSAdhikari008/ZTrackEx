@@ -1,7 +1,7 @@
 import { describe, test, vi, expect, afterEach } from "vitest";
-import { getAllExpenses } from "../../../src/controllers/expenses.controller.js";
+import { addExpense, getAllExpenses } from "../../../src/controllers/expenses.controller.js";
 import { Expense } from "../../../src/models/expense.model.js";
-import { getAllExpensesQueryValidator } from "../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, getAllExpensesQueryValidator } from "../../../src/middleware/validators/expense.validator.js";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -366,5 +366,145 @@ describe("getAllExpenses", () => {
 
 
 describe("addExpense", ()=>{
-  test.todo("test",async ()=>{})
-})
+ 
+  async function bodyValidator(body){
+    const req = {body};
+
+    for(const validator of addExpenseValidator){
+      await validator.run(req)
+    }
+
+    return req;
+  }
+ 
+  test("return 201 when only title and amount provided ",async ()=>{
+
+    const req = await bodyValidator({
+      title: "exp1",
+      amount: 125.253,
+    });
+    req.user = {id: "user123"};
+
+    const expense = {
+      title: req.body.title,
+      amount: Math.round(req.body.amount * 100), // keep Math.round for floating-point safety
+      user: req.user.id,
+      date: undefined,
+      category: undefined,
+    };
+
+    const createdExpense = {
+      ...expense,
+      date: new Date("2026-10-20T00:00:00.000Z"),
+      category: "Others",
+    };
+
+    const create = vi.spyOn(Expense, 'create').mockResolvedValue(createdExpense);
+
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn()
+    };
+
+    const next = vi.fn();
+
+    await addExpense(req,res,next);
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create).toHaveBeenCalledWith(expense);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Expense added successfully',
+      data: {
+        expense: {
+          title: createdExpense.title,
+          amount: createdExpense.amount / 100,
+          date: createdExpense.date,
+          category: createdExpense.category,
+        }
+      }
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  test("return 201 and use user-sent date and category when all values are provided",async ()=>{
+
+    const req = await bodyValidator({
+      title: "exp1",
+      amount: 125.253,
+      date: "2026-10-20",
+      category: "Food"
+    });
+    req.user = {id: "user123"};
+
+    const expenseCall = {
+      title: req.body.title,
+      amount: 12525,
+      user: req.user.id,
+      date: new Date("2026-10-20T00:00:00.000Z"),
+      category: req.body.category,
+    };
+
+    const createdExpense = {...expenseCall};
+
+    const create = vi.spyOn(Expense, 'create').mockResolvedValue(createdExpense);
+
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn()
+    };
+
+    const next = vi.fn();
+
+    await addExpense(req,res,next);
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create).toHaveBeenCalledWith(expenseCall);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Expense added successfully',
+      data: {
+        expense: {
+          title: createdExpense.title,
+          amount: createdExpense.amount / 100,
+          date: createdExpense.date,
+          category: createdExpense.category,
+        }
+      }
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  test("call next() if Expense.create() rejects", async ()=>{
+
+    const req = await bodyValidator({
+      title: "exp1",
+      amount: 125.253,
+    });
+    req.user = {id: "user123"};
+
+    const expense = {
+      title: req.body.title,
+      amount: Math.round(req.body.amount * 100), // keep Math.round for floating-point safety
+      user: req.user.id,
+      date: undefined,
+      category: undefined,
+    };
+
+    const create = vi.spyOn(Expense, 'create').mockRejectedValue(new Error("Database error"));
+
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn()
+    };
+    const next = vi.fn();
+
+    await addExpense(req, res, next)
+
+    expect(create).toHaveBeenCalledWith(expense)
+    expect(res.status).not.toHaveBeenCalled()
+    expect(res.json).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalled()
+
+  })
+});

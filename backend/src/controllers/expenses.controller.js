@@ -56,7 +56,7 @@ export const addExpense = async (req, res, next) => {
         const user = req.user.id;
         const {title, amount, date, category} = matchedData(req);
 
-        //convert amount to paisa
+        // Keep Math.round for floating-point safety. 
         const paisaAmount = Math.round(amount * 100);
 
         const expense = await Expense.create({
@@ -71,11 +71,13 @@ export const addExpense = async (req, res, next) => {
 
         res.status(201).json({
             message: 'Expense added successfully',
-            expense: {
-                title: expense.title,
-                amount: rupeeAmount,
-                date: expense.date,
-                category: expense.category
+            data: {
+                expense: {
+                    title: expense.title,
+                    amount: rupeeAmount,
+                    date: expense.date,
+                    category: expense.category
+                }
             }
         })
 
