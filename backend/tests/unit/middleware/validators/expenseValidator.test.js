@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { addExpenseValidator, getAllExpensesQueryValidator } from "../../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator } from "../../../../src/middleware/validators/expense.validator.js";
  
 
 describe("getAllExpensesQueryValidator", ()=>{
@@ -64,6 +64,45 @@ describe("getAllExpensesQueryValidator", ()=>{
     test("accepts missing optional parameters", async () => {
         const { errors } = await validateQuery({});
         expect(errors).toHaveLength(0);
+    });
+});
+
+describe("getExpenseByIdValidator", () => {
+
+    async function validateId(id) {
+        const req = { params: { id } };
+
+        for (const validator of getExpenseByIdValidator) {
+            await validator.run(req);
+        }
+        return {req,errors: validationResult(req).array()};
+    }
+
+    test("accepts a valid MongoDB ID", async () => {
+        const {req, errors} = await validateId("507f1f77bcf86cd799439011");
+
+        expect(errors).toHaveLength(0);
+        expect(req.params.id).toBe("507f1f77bcf86cd799439011");
+    });
+
+    test.for([
+        {
+            id: "not-an-id",
+            description: "a malformed ID"
+        },
+        {
+            id: "507f1f77bcf86cd79943901",
+            description: "an ID that is too short"
+        },
+        {
+            id: "",
+            description: "an empty ID"
+        }
+    ])("rejects $description", async ({ id }) => {
+        const {errors} = await validateId(id);
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0].path).toBe("id");
     });
 });
 

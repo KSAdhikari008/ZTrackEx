@@ -1,4 +1,4 @@
-import { body, query } from "express-validator";
+import { body, param, query } from "express-validator";
 import { category } from "../../constants/category.js";
 
 export const getAllExpensesQueryValidator = [
@@ -18,6 +18,13 @@ export const getAllExpensesQueryValidator = [
         .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Date must be in YYYY-MM-DD format').bail() // that's how the react form sends it.
         .toDate()
 ];
+
+export const getExpenseByIdValidator = [
+    param('id')
+        .isMongoId().withMessage('Invalid expense ID')
+];
+
+
 
 export const addExpenseValidator = [
     body('title')

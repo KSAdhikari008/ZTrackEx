@@ -48,9 +48,73 @@ export const getAllExpenses = async (req, res, next) => {
 }
 
 export const getMonthlyExpense = async (req, res, next) => {
-    
+     try{
+        //NOTE add pagination
+
+        const now = new Date();
+        const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+        const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+
+        const query = {
+          user: req.user.id,
+          date: { $gte: startOfMonth, $lt: startOfNextMonth },
+        };
+
+        const expenses = await Expense.find(query);
+
+        res.status(200).json({
+            message: " Monthly expenses retrieved successfully",
+            data: {
+                expenses: expenses.map(expense => ({
+                    title: expense.title,
+                    amount: expense.amount/100,
+                    date: expense.date,
+                    category: expense.category,
+                    expenseId: expense._id
+                }))
+            }
+        })
+        
+     } catch (err){
+
+        console.error(" Get monthly expenses error:", err);
+        next(err);
+     }
 }
-export const getExpenseById = async (req, res, next) => {}
+
+export const getExpenseById = async (req, res, next) => {
+    try {
+      const { id: expenseId } = matchedData(req);
+
+      const expense = await Expense.findOne({
+        user: req.user.id,
+        _id: expenseId
+      })
+
+
+      if(!expense){
+        return res.status(404).json({
+            message: "Expense not found",
+            data: { expense: null }
+        })
+      }
+
+      res.status(200).json({
+        message: "Expense retrieved successfully",
+        data: {
+          expense: {
+            title: expense.title,
+            amount: expense.amount / 100,
+            date: expense.date,
+            category: expense.category,
+          },
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+}
 
 export const addExpense = async (req, res, next) => {
     
@@ -90,5 +154,8 @@ export const addExpense = async (req, res, next) => {
 }
 
 export const updateExpense = async (req, res, next) => {}
-export const deleteExpense = async (req, res, next) => {}
+
+export const deleteExpense = async (req, res, next) => {
+
+}
 

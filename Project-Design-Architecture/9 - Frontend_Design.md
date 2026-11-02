@@ -28,7 +28,7 @@ Shows:
 - Budget left(monthly)
 - Top food category 
 - spending by catogery ( show in a bar with diff colors for every category)
-- a list of recent expenses 
+- a list of recent expenses (GET / getAllExpenses limit=5)
 
 #### 3.1 Dashboard - mobile view
 <img src="../UI_Layout/3 - home-page-mobile.png" alt="Project Screenshot" width="500">
