@@ -1,11 +1,11 @@
 import { afterEach, describe, test, expect, vi } from "vitest";
-import { COOKIE_NAME } from "../../src/config/cookie.js";
+import { COOKIE_NAME } from "../../../src/config/cookie.js";
 import jwt from "jsonwebtoken";
-import { User } from "../../src/models/user.model.js";
+import { User } from "../../../src/models/user.model.js";
 
 // Set the test secret before importing the middleware so it uses the test secret instead of the production secret.
 process.env.JWT_SECRET = 'text-jwt-secret'
-import { authenticate } from "../../src/middleware/auth.js";
+import { authenticate } from "../../../src/middleware/auth.js";
 
 afterEach(() => {
   vi.restoreAllMocks();

@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { loginValidator, registerValidator } from "../../../src/middleware/validators/authValidator.js";
+import { loginValidator, registerValidator } from "../../../../src/middleware/validators/authValidator.js";
 
 async function validateBody(validators, body) {
     const req = { body };
