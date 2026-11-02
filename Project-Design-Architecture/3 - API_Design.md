@@ -35,8 +35,8 @@ POST /                   - add/create new expense (has category and update budge
 PATCH /:id               - edit/update expense by id
 DELETE /:id              - delete by id
 
+### NOTES:
 - **Amount property in Expense model stored as paisa in DB. No decimals for safer calculation**
-
 - **Date Handling**
     - **User-provided date:** A date-only string like `"2026-10-24"` (formData in frontend) is parsed as midnight UTC: `2026-10-24T00:00:00.000Z` by the expenseValidator.
     - **Default date:** In the expense schema `Date.now` stores the current timestamp, not midnight UTC. If the schema normalizes the default to UTC midnight, it stores the start of the current UTC day instead.
@@ -52,6 +52,44 @@ DELETE /:id              - delete by id
       ```
     - `$gte` includes midnight at the start of the day, while `$lt` excludes midnight at the start of the next day.
     - This range works whether an expense's timestamp is midnight or another time during that UTC day.
+
+
+
+### Calculating months date for monthly expeses.
+
+A JavaScript `Date` can represent a month as the range from its first day to the first day of the next month, accounting for months of different lengths.
+
+```js
+const now = new Date();
+
+const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+```
+
+`new Date(year, month + 1, 1)` automatically rolls over to January of the next year when `month` is December. Likewise, subtracting one day from March 1 gives February 28 or 29, depending on the year.
+
+#### date range in a query
+
+```js
+Expense.find({
+  user: userId,
+  date: { $gte: startOfMonth, $lt: endOfMonth }
+})
+```
+
+`$gte` start of month, `$lt` (strictly less than) start of *next* month (comparing against the next month's boundary).
+
+#### The library option if needed later
+
+For more complex date logic, such as calculating the start of last month or handling time zones, libraries like **`date-fns`** or **`dayjs`** are options:
+
+```js
+import { startOfMonth, endOfMonth } from "date-fns";
+
+const start = startOfMonth(new Date());
+const end = endOfMonth(new Date());
+```
+
 
 
 

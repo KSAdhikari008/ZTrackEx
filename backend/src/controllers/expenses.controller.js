@@ -11,7 +11,7 @@ export const getAllExpenses = async (req, res, next) => {
         const filter = {user: id};
 
         if(date){
-            const start = date; // NOTE
+            const start = date; 
             const end = new Date(date);
             end.setUTCDate(end.getUTCDate() + 1);
             filter.date = {
@@ -47,7 +47,9 @@ export const getAllExpenses = async (req, res, next) => {
     }
 }
 
-export const getMonthlyExpense = async (req, res, next) => {}
+export const getMonthlyExpense = async (req, res, next) => {
+    
+}
 export const getExpenseById = async (req, res, next) => {}
 
 export const addExpense = async (req, res, next) => {
