@@ -335,6 +335,8 @@ describe("getAllExpenses", () => {
   });
   
   test("should pass count query errors to the error handler", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const req = {
       user: { id: "user123" },
     };
@@ -359,6 +361,7 @@ describe("getAllExpenses", () => {
 
     expect(countDocuments).toHaveBeenCalledWith({ user: req.user.id });
     expect(next).toHaveBeenCalledWith(error);
+    expect(consoleError).toHaveBeenCalledWith("Get all expenses error:", error);
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();
   });
@@ -476,6 +479,7 @@ describe("addExpense", ()=>{
   });
 
   test("call next() if Expense.create() rejects", async ()=>{
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const req = await bodyValidator({
       title: "exp1",
@@ -506,6 +510,6 @@ describe("addExpense", ()=>{
     expect(res.status).not.toHaveBeenCalled()
     expect(res.json).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalledWith(error)
-
+    expect(consoleError).toHaveBeenCalledWith("Add expense error:", error)
   })
 });

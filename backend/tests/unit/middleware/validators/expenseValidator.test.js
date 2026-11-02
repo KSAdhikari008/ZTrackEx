@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { addExpenseValidator, getAllExpensesQueryValidator } from "../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, getAllExpensesQueryValidator } from "../../../../src/middleware/validators/expense.validator.js";
  
 
 describe("getAllExpensesQueryValidator", ()=>{
