@@ -24,8 +24,6 @@ export const getExpenseByIdValidator = [
         .isMongoId().withMessage('Invalid expense ID')
 ];
 
-
-
 export const addExpenseValidator = [
     body('title')
         .isString().withMessage('Invalid title').bail()
@@ -50,3 +48,45 @@ export const addExpenseValidator = [
         .trim()
         .isIn(category).withMessage('Invalid category')
 ]
+
+export const updateExpenseValidator = [
+    param('id')
+        .isMongoId().withMessage('Invalid expense ID'),
+
+    body('title')
+        .optional()
+        .isString().withMessage('Invalid title').bail()
+        .trim()
+        .notEmpty().withMessage('Title is required').bail()
+        .isLength({max: 30}).withMessage("Title can't be longer than 30 characters").bail(),
+
+    body('amount')
+        .optional()
+        .notEmpty().withMessage('Amount is required').bail()
+        .isFloat({ gt: 0 }).withMessage('Amount must be greater than 0').bail()
+        .customSanitizer(value => Math.round(Number(value) * 100) / 100),
+
+    body('date')
+        .optional()
+        .isISO8601().withMessage('Invalid date format').bail()
+        .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Date must be in YYYY-MM-DD format').bail() // that's how the react form sends it.
+        .toDate(),
+
+    body('category')
+        .optional()
+        .isString().withMessage('Invalid category').bail()
+        .trim()
+        .isIn(category).withMessage('Invalid category'),
+
+    body().custom((value) => {
+        if (!['title', 'amount', 'date', 'category'].some(key => value[key] !== undefined)) {
+            throw new Error('At least one field must be provided');
+        }
+        return true;
+    })
+];
+
+export const deleteExpenseValidator = [
+    param('id')
+        .isMongoId().withMessage('Invalid expense ID')
+];

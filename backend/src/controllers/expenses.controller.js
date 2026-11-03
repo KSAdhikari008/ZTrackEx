@@ -25,12 +25,14 @@ export const getAllExpenses = async (req, res, next) => {
             .skip(skip)
             .limit(limit)
             .select('title amount category date');
-        
-        // convert the mongo doc to plain object and convert amount to rupees
-        const formattedExpenses = expenses.map(ex => {
-            const expense = ex.toObject();
-            return {...expense, amount: expense.amount/100};
-        })
+                
+        const formattedExpenses = expenses.map((ex) => ({
+          _id: ex._id,
+          title: ex.title,
+          amount: ex.amount / 100,
+          category: ex.category,
+          date: ex.date,
+        }));
 
         const totalExpenses = await Expense.countDocuments(filter);
 
@@ -122,7 +124,7 @@ export const addExpense = async (req, res, next) => {
         const user = req.user.id;
         const {title, amount, date, category} = matchedData(req);
 
-        // Keep Math.round for floating-point safety. 
+        // Math.round for floating-point safety. 
         const paisaAmount = Math.round(amount * 100);
 
         const expense = await Expense.create({
@@ -153,9 +155,68 @@ export const addExpense = async (req, res, next) => {
     }
 }
 
-export const updateExpense = async (req, res, next) => {}
+export const updateExpense = async (req, res, next) => {
+    try{
+
+        const {id: expenseId, title, amount, date, category } = matchedData(req);
+
+        const data = {};
+
+        if (title !== undefined) data.title = title;
+        if (amount !== undefined) data.amount = Math.round(amount * 100);
+        if (date !== undefined) data.date = date;
+        if (category !== undefined) data.category = category;
+
+        const expense = await Expense.findOneAndUpdate(
+            {user: req.user.id, _id: expenseId},
+            data,
+            {returnDocument: "after", runValidators: true} // runs schema validations
+        ).select("title amount date category");
+
+        if(!expense){
+            return res.status(404).json({
+                message: "Expense not found"
+            })
+        }
+    
+        res.status(200).json({
+            message: "Expense updated successfully",
+            data: {
+                expense: {
+                    id: expense._id,
+                    title: expense.title,
+                    amount: expense.amount / 100, // convert back to rupees
+                    date: expense.date,
+                    category: expense.category
+                }
+            }
+        })
+
+    }catch(err){
+        console.error("Update expense error: ", err);
+        next(err);
+    }
+}
 
 export const deleteExpense = async (req, res, next) => {
 
+    try {
+        const { id: expenseId } = matchedData(req);
+
+        const expense = await Expense.deleteOne({ user: req.user.id, _id: expenseId });
+
+        if (expense.deletedCount === 0) {
+                return res.status(404).json({
+                    message: "Expense not found."
+                });
+            }
+
+        res.status(200).json({
+            message: "Expense deleted successfully",
+        });
+    } catch (err) {
+        console.error("Delete expense error:", err);
+        next(err);
+    }
 }
 
