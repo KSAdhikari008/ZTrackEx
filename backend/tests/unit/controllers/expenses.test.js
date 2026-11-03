@@ -76,7 +76,7 @@ describe("getAllExpenses", () => {
     await getAllExpenses(req, res, next);
 
     expect(find).toHaveBeenCalledWith(filter);
-    expect(query.sort).toHaveBeenCalledWith({ date: -1 });
+    expect(query.sort).toHaveBeenCalledWith({ date: -1, _id: -1 });
     expect(query.skip).toHaveBeenCalledWith(skipTest);
     expect(query.limit).toHaveBeenCalledWith(req.query.limit);
     expect(query.select).toHaveBeenCalledWith("title amount category date");
@@ -185,7 +185,7 @@ describe("getAllExpenses", () => {
     await getAllExpenses(req, res, next);
 
     expect(find).toHaveBeenCalledWith(filter);
-    expect(query.sort).toHaveBeenCalledWith({date: -1})
+    expect(query.sort).toHaveBeenCalledWith({date: -1, _id: -1})
     expect(query.skip).toHaveBeenCalledWith(skip)
     expect(query.limit).toHaveBeenCalledWith(req.query.limit)
     expect(query.select).toHaveBeenCalledWith('title amount category date')
@@ -268,7 +268,7 @@ describe("getAllExpenses", () => {
     await getAllExpenses(req, res, next);
 
     expect(find).toHaveBeenCalledWith(filter);
-    expect(query.sort).toHaveBeenCalledWith({ date: -1 });
+    expect(query.sort).toHaveBeenCalledWith({ date: -1, _id: -1 });
     expect(query.skip).toHaveBeenCalledWith(0);
     expect(query.limit).toHaveBeenCalledWith(10);
     expect(query.select).toHaveBeenCalledWith("title amount category date");

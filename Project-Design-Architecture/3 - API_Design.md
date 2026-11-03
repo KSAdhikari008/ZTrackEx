@@ -1,12 +1,5 @@
 # API designs
 
-
-## Response Shape
-```json
-{ "message": "", "data": {...} }
-{ "message": "", "errors": [] }
-```
-
 ## Auth - /api/auth
 
 POST   /api/auth/register
@@ -26,71 +19,126 @@ We already designed these earlier — technically these live more naturally unde
 Delete account — DELETE /api/users/me
 Lets a user delete their own account (and probably cascade-delete their Expenses/Budgets too, or you'd have orphaned data referencing a deleted user). Not strictly necessary for MVP, but a very common expectation in any real app with auth.
 
-## Expense - /api/expenses
+## Expense API — `/api/expenses`
 
-GET /?page=x&limit=10&.. - query based numbered pagination to be used on expnese list.Check example below.
-GET /month               - expense so far this month
-GET /:id                 - get single expense by id
-POST /                   - add/create new expense (has category and update budget)
-PATCH /:id               - edit/update expense by id
-DELETE /:id              - delete by id
+The Expense API handles expense creation, retrieval, updates, deletion, pagination, and date-based filtering. All expense operations are scoped to the authenticated user.
 
-### NOTES:
-- **Amount property in Expense model stored as paisa in DB. No decimals for safer calculation**
-- **Date Handling**
-    - **User-provided date:** A date-only string like `"2026-10-24"` (formData in frontend) is parsed as midnight UTC: `2026-10-24T00:00:00.000Z` by the expenseValidator.
-    - **Default date:** In the expense schema `Date.now` stores the current timestamp, not midnight UTC. If the schema normalizes the default to UTC midnight, it stores the start of the current UTC day instead.
+### 1. API Endpoints
 
-- **Filtering expenses by date**
-    - An expense's `date` field may contain a time component, so use a range to retrieve all expenses for a specific UTC calendar day.
-    - For October 24, 2026:
-      ```js
-      date: {
-        $gte: new Date("2026-10-24T00:00:00.000Z"),
-        $lt: new Date("2026-10-25T00:00:00.000Z")
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Retrieve paginated expenses |
+| GET | `/month` | Retrieve current month's expenses |
+| GET | `/:id` | Retrieve a single expense |
+| POST | `/` | Create an expense |
+| PATCH | `/:id` | Partially update an expense |
+| DELETE | `/:id` | Delete an expense |
+
+### 2. Expense List & Pagination
+
+**Example request:**
+
+`GET /api/expenses?page=1&limit=20&date=2026-08-01`
+
+The expense list API supports numbered pagination and optional filtering by a specific date.
+
+- `page`: Page number (default: `1`).
+- `limit`: Results per page (default: `10`, maximum: `100`).
+- `date`: Optional date filter (`YYYY-MM-DD`).
+- Expenses are sorted by date descending, followed by ID descending.
+- Category filtering, date ranges (`from` / `to`), and custom sorting are not currently supported.
+
+**Example response:**
+
+```json
+{
+  "message": "Expenses retrieved successfully",
+  "data": {
+    "totalExpenses": 143,
+    "expenses": [
+      {
+        "_id": "...",
+        "title": "...",
+        "amount": 12.34,
+        "category": "...",
+        "date": "..."
       }
-      ```
-    - `$gte` includes midnight at the start of the day, while `$lt` excludes midnight at the start of the next day.
-    - This range works whether an expense's timestamp is midnight or another time during that UTC day.
+    ]
+  }
+}
+```
 
+### 3. Amount Handling
 
+Expense amounts are stored as integers in **paisa** rather than rupees to avoid floating-point precision issues.
 
-### Calculating months date for monthly expeses.
+- Rupees to paisa: `Math.round(amount * 100)`
+- Paisa to rupees: `amount / 100`
 
-A JavaScript `Date` can represent a month as the range from its first day to the first day of the next month, accounting for months of different lengths.
+Amounts are converted back to rupees in API responses.
+
+### 4. Date Handling & Filtering
+
+The application uses JavaScript `Date` objects for storing and querying expense dates.
+
+**User-provided dates:**
+- The frontend sends date-only strings through FormData, such as `"2026-10-24"`.
+- The expense validator converts them into JavaScript Date objects.
+- Date-only ISO strings are interpreted as midnight UTC (`2026-10-24T00:00:00.000Z`).
+
+**Default dates:**
+- The Expense schema uses `Date.now` as its default.
+- This stores the current timestamp rather than normalizing it to midnight UTC.
+
+**Filtering by a specific day:**
+
+Since expense timestamps may contain different times, date filtering uses an inclusive start and exclusive end boundary.
+
+```js
+date: {
+    $gte: new Date("2026-10-24T00:00:00.000Z"),
+    $lt: new Date("2026-10-25T00:00:00.000Z")
+}
+```
+
+- `$gte`: Includes the beginning of the selected day.
+- `$lt`: Excludes the beginning of the following day.
+
+This ensures all expenses within the selected UTC calendar day are retrieved.
+
+### 5. Monthly Expense Calculation
+
+The monthly expense endpoint uses the first day of the current month and the first day of the next month as its date boundaries.
 
 ```js
 const now = new Date();
 
-const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+const startOfMonth = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)
+);
+
+const startOfNextMonth = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)
+);
 ```
 
-`new Date(year, month + 1, 1)` automatically rolls over to January of the next year when `month` is December. Likewise, subtracting one day from March 1 gives February 28 or 29, depending on the year.
-
-#### date range in a query
+**MongoDB query:**
 
 ```js
 Expense.find({
-  user: userId,
-  date: { $gte: startOfMonth, $lt: endOfMonth }
-})
+    user: userId,
+    date: {
+        $gte: startOfMonth,
+        $lt: startOfNextMonth
+    }
+});
 ```
 
-`$gte` start of month, `$lt` (strictly less than) start of *next* month (comparing against the next month's boundary).
+Using the first day of the next month as the exclusive upper boundary automatically handles different month lengths, leap years, and year transitions.
 
-#### The library option if needed later
+### 6. Date Utility Libraries
 
-For more complex date logic, such as calculating the start of last month or handling time zones, libraries like **`date-fns`** or **`dayjs`** are options:
-
-```js
-import { startOfMonth, endOfMonth } from "date-fns";
-
-const start = startOfMonth(new Date());
-const end = endOfMonth(new Date());
-```
-
-
+Native JavaScript Date methods are currently used for date calculations. For more complex date manipulation or timezone handling, libraries such as `date-fns` or `dayjs` can be introduced if needed.
 
 
 ## Budget - /api/budgets
@@ -104,49 +152,6 @@ DELETE /:id              - delete budget
 ## Dashboard - /api/dashboards
 
 GET /api/dashboard?month=2026-09  - returns all the data required for the dashboard/home.
-
-## Categories - /api/categories
-
-GET /api/categories      - gives enum categories from constant.js file, more on 4 folder structore notes.
-
-# NOTE:
-
-## api/expenses
-
-- check for when a user tries to access someoneelse's expense.
-
- controller 2: user tries to edit someone else's expense
-const updateExpense = async (req, res, next) => {
-  try {
-    const expense = await Expense.findById(req.params.id);
-    if (expense.user.toString() !== req.user.id) {
-      const error = new Error("Not authorized to edit this expense");
-      error.statusCode = 403;
-      return next(error);
-    }
-    // ... update logic
-  } catch (err) {
-    next(err);
-  }
-};
-
-pagination api Example:-
-
-    GET /api/expenses?page=1&limit=20&category=food&from=2026-08-01&to=2026-08-31&sort=date_desc
-
-    res:
-    {
-        "data": [ ... ],
-        "meta": {
-            "page": 1,
-            "limit": 20,
-            "totalItems": 143,
-            "totalPages": 8
-            }
-    }
-
-
-## api/dashboard
 
 queries and aggregations:
 
@@ -184,5 +189,17 @@ res ex:
         ]
     }
 
+
+## Categories - /api/categories
+
+GET /api/categories      - gives enum categories from constant.js file, more on 4 folder structore notes.
+
+# OTHERS:
+
+## Response Shape
+```json
+{ "message": "", "data": {...} }
+{ "message": "", "errors": [] }
+```
 
 ## ** for custom category in v2 , we will use separate api route giving specifc category budget.**

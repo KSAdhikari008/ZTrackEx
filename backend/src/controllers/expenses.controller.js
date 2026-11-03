@@ -21,7 +21,7 @@ export const getAllExpenses = async (req, res, next) => {
         }
 
         const expenses = await Expense.find(filter)
-            .sort({ date: -1 })
+            .sort({ date: -1, _id: -1 }) // Sort by date descending, then by _id descending for consistent ordering
             .skip(skip)
             .limit(limit)
             .select('title amount category date');

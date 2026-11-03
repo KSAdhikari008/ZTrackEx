@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { addExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator } from "../../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, deleteExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator, updateExpenseValidator } from "../../../../src/middleware/validators/expense.validator.js";
  
 
 describe("getAllExpensesQueryValidator", ()=>{
@@ -322,3 +322,121 @@ describe("addExpenseValidator", ()=>{
     });
 
 })
+
+describe("updateExpenseValidator", () => {
+
+    async function validateUpdate(id, body) {
+        const req = { params: { id }, body };
+
+        for (const validator of updateExpenseValidator) {
+            await validator.run(req);
+        }
+
+        return {
+            req,
+            errors: validationResult(req).array()
+        };
+    }
+
+    test("accepts an complete update and sanitizes provided fields", async () => {
+        const { req, errors } = await validateUpdate("507f1f77bcf86cd799439011", {
+            title: "  groceries  ",
+            amount: "12.345",
+            date: "2026-10-14",
+            category: "  Food  "
+        });
+
+        expect(errors).toHaveLength(0);
+        expect(req.body.title).toBe("groceries");
+        expect(req.body.amount).toBe(12.35);
+        expect(req.body.date).toBeInstanceOf(Date);
+        expect(req.body.category).toBe("Food");
+    });
+
+    test("accepts a partial update with one provided field", async () => {
+        const { errors } = await validateUpdate("507f1f77bcf86cd799439011", {
+            title: "Updated expense"
+        });
+
+        expect(errors).toHaveLength(0);
+    });
+
+    test("accepts a title with exactly 30 characters", async () => {
+        const title = "a".repeat(30);
+        const { req, errors } = await validateUpdate("507f1f77bcf86cd799439011", { title });
+
+        expect(errors).toHaveLength(0);
+        expect(req.body.title).toBe(title);
+    });
+
+    test("rejects an update with no editable fields", async () => {
+        const { errors } = await validateUpdate("507f1f77bcf86cd799439011", {});
+
+        expect(errors.some((error) => error.msg === "At least one field must be provided")).toBe(true);
+    });
+
+    test("rejects an update containing only unrecognized fields", async () => {
+        const { errors } = await validateUpdate("507f1f77bcf86cd799439011", {
+            description: "Not an editable expense field"
+        });
+
+        expect(errors.some((error) => error.msg === "At least one field must be provided")).toBe(true);
+    });
+
+    test("rejects an invalid expense ID", async () => {
+        const { errors } = await validateUpdate("not-an-id", { title: "Updated" });
+
+        expect(errors.some((error) => error.path === "id")).toBe(true);
+    });
+
+    test.for([
+        { body: { title: 123 }, path: "title" },
+        { body: { title: "   " }, path: "title" },
+        { body: { title: "a".repeat(31) }, path: "title" },
+        { body: { amount: "" }, path: "amount" },
+        { body: { amount: "0" }, path: "amount" },
+        { body: { amount: "-1" }, path: "amount" },
+        { body: { amount: "not-a-number" }, path: "amount" },
+        { body: { date: "not-a-date" }, path: "date" },
+        { body: { date: "2026-10-14T12:00:00Z" }, path: "date" },
+        { body: { category: 123 }, path: "category" },
+        { body: { category: "Invalid" }, path: "category" }
+    ])("rejects an invalid update to $path", async ({ body, path }) => {
+        const { errors } = await validateUpdate("507f1f77bcf86cd799439011", body);
+
+        expect(errors.some((error) => error.path === path)).toBe(true);
+    });
+});
+
+describe("deleteExpenseValidator", () => {
+
+    async function validateDelete(id) {
+        const req = { params: { id } };
+
+        for (const validator of deleteExpenseValidator) {
+            await validator.run(req);
+        }
+
+        return {
+            req,
+            errors: validationResult(req).array()
+        };
+    }
+
+    test("accepts a valid MongoDB ID", async () => {
+        const { errors } = await validateDelete("507f1f77bcf86cd799439011");
+
+        expect(errors).toHaveLength(0);
+    });
+
+    test.for([
+        { id: "not-an-id", description: "a malformed ID" },
+        { id: "507f1f77bcf86cd79943901", description: "an ID that is too short" },
+        { id: "", description: "an empty ID" }
+    ])("rejects $description", async ({ id }) => {
+        const { errors } = await validateDelete(id);
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0].path).toBe("id");
+    });
+});
