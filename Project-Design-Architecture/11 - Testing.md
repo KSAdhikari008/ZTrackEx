@@ -33,3 +33,8 @@ There isn't a universal rule that every function needs three tests or that every
 |Test isolation|Avoid using production data or sharing mutable test state unexpectedly|
 |Test edge cases|Include boundary values, missing inputs, and failure scenarios where relevant|
 |Clean up mocks|Clear or restore mock state when necessary to prevent tests interfering with each other|
+
+## Testing data
+
+The mock data script uses Faker.js to generate realistic expense titles, amounts, categories, and dates. It assigns each expense to a selected test user and inserts the records through the Mongoose model. Set ALLOW_MOCK_DATA=true and provide MOCK_USER_ID before running it.
+
