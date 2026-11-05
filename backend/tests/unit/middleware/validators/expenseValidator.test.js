@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { addExpenseValidator, deleteExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator, updateExpenseValidator } from "../../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, deleteExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator, getMonthlyExpenseQueryValidator, updateExpenseValidator } from "../../../../src/middleware/validators/expense.validator.js";
  
 
 describe("getAllExpensesQueryValidator", ()=>{
@@ -64,6 +64,45 @@ describe("getAllExpensesQueryValidator", ()=>{
     test("accepts missing optional parameters", async () => {
         const { errors } = await validateQuery({});
         expect(errors).toHaveLength(0);
+    });
+});
+
+describe("getMonthlyExpenseQueryValidator", () => {
+    async function validateQuery(query) {
+        const req = { query };
+
+        for (const validator of getMonthlyExpenseQueryValidator) {
+            await validator.run(req);
+        }
+
+        return {
+            req,
+            errors: validationResult(req).array(),
+        };
+    }
+
+    test("accepts valid pagination parameters and sanitizes them", async () => {
+        const { req, errors } = await validateQuery({ page: "2", limit: "10" });
+
+        expect(errors).toHaveLength(0);
+        expect(req.query.page).toBe(2);
+        expect(req.query.limit).toBe(10);
+    });
+
+    test("accepts missing optional parameters", async () => {
+        const { errors } = await validateQuery({});
+
+        expect(errors).toHaveLength(0);
+    });
+
+    test.for([
+        { query: { page: "0" }, field: "page" },
+        { query: { limit: "101" }, field: "limit" },
+    ])("rejects invalid $field", async ({ query, field }) => {
+        const { errors } = await validateQuery(query);
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0].path).toBe(field);
     });
 });
 

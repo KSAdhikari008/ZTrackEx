@@ -51,18 +51,26 @@ export const getAllExpenses = async (req, res, next) => {
 
 export const getMonthlyExpense = async (req, res, next) => {
      try{
-        //NOTE add pagination
+
+        const {page = 1, limit = 10} = matchedData(req);
+        const skip = (page-1)*limit;
+
 
         const now = new Date();
         const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
         const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
-
         const query = {
           user: req.user.id,
           date: { $gte: startOfMonth, $lt: startOfNextMonth },
         };
 
-        const expenses = await Expense.find(query);
+        const expenses = await Expense.find(query)
+            .sort({date: -1, _id: -1})
+            .skip(skip)
+            .limit(limit)
+            .select("title amount category date");
+
+
 
         res.status(200).json({
             message: " Monthly expenses retrieved successfully",

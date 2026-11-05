@@ -19,6 +19,20 @@ export const getAllExpensesQueryValidator = [
         .toDate()
 ];
 
+export const getMonthlyExpenseQueryValidator = [
+    query('page')
+        .optional()
+        .isInt({ min: 1 }).withMessage('Page must be a positive integer').bail()
+        .toInt(),
+
+    query('limit')
+        .optional()
+        .isInt({ min: 1, max: 100 }).withMessage('Limit must be an integer between 1 and 100').bail()
+        .toInt()
+];
+
+
+
 export const getExpenseByIdValidator = [
     param('id')
         .isMongoId().withMessage('Invalid expense ID')
