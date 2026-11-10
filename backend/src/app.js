@@ -37,6 +37,7 @@ app.use("/api/users", usersRouter);
 app.get("/test-ip", (req, res) => {
     res.json({
         ip: req.ip,
+        ips: req.ips,
         forwardedFor: req.headers["x-forwarded-for"]
     });
 });
