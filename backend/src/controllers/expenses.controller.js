@@ -55,7 +55,6 @@ export const getMonthlyExpense = async (req, res, next) => {
         const {page = 1, limit = 10} = matchedData(req);
         const skip = (page-1)*limit;
 
-
         const now = new Date();
         const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
         const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
@@ -70,11 +69,12 @@ export const getMonthlyExpense = async (req, res, next) => {
             .limit(limit)
             .select("title amount category date");
 
-
+        const totalExpenses = await Expense.countDocuments(query);
 
         res.status(200).json({
             message: " Monthly expenses retrieved successfully",
             data: {
+                totalExpenses,
                 expenses: expenses.map(expense => ({
                     title: expense.title,
                     amount: expense.amount/100,
