@@ -11,8 +11,8 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { globalLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
-// Set trust proxy to 1 if behind a reverse proxy (when deployed on render)
-app.set("trust proxy", 3);
+// Trust the three proxy hops in Render's infrastructure(render -> cloudflare -> clientIP) to identify the original client IP.
+app.set("trust proxy", 3); 
 
 //Middlewares
 app.use(cors({
@@ -33,14 +33,6 @@ app.use("/api/budgets", budgetsRouter);
 app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/users", usersRouter);
-
-app.get("/test-ip", (req, res) => {
-    res.json({
-        ip: req.ip,
-        ips: req.ips,
-        forwardedFor: req.headers["x-forwarded-for"]
-    });
-});
 
 // 404 handler for undefined routes
 app.use((req, res, next)=>{
