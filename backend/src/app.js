@@ -8,8 +8,11 @@ import dashboardsRouter from "./routes/dashboards.routes.js";
 import categoriesRouter from "./routes/categories.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { globalLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
+// Set trust proxy to 1 if behind a reverse proxy (when deployed on render)
+app.set("trust proxy", 1);
 
 //Middlewares
 app.use(cors({
@@ -21,6 +24,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(globalLimiter);
 
 //Routes
 app.use("/api/auth", authRouter);
