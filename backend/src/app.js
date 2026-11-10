@@ -12,7 +12,7 @@ import { globalLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
 // Set trust proxy to 1 if behind a reverse proxy (when deployed on render)
-app.set("trust proxy", 1);
+app.set("trust proxy", 3);
 
 //Middlewares
 app.use(cors({
