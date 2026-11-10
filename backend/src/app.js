@@ -34,6 +34,13 @@ app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/users", usersRouter);
 
+app.get("/test-ip", (req, res) => {
+    res.json({
+        ip: req.ip,
+        forwardedFor: req.headers["x-forwarded-for"]
+    });
+});
+
 // 404 handler for undefined routes
 app.use((req, res, next)=>{
   const forwardedError = new Error(`Can't find ${req.originalUrl} on this server!`);
