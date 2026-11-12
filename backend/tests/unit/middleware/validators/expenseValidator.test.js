@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { validationResult } from "express-validator";
-import { addExpenseValidator, deleteExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator, getMonthlyExpenseQueryValidator, updateExpenseValidator } from "../../../../src/middleware/validators/expense.validator.js";
+import { addExpenseValidator, deleteExpenseValidator, getAllExpensesQueryValidator, getExpenseByIdValidator, getMonthlyExpensesQueryValidator, updateExpenseValidator } from "../../../../src/middleware/validators/expense.validator.js";
  
 
 describe("getAllExpensesQueryValidator", ()=>{
@@ -67,11 +67,11 @@ describe("getAllExpensesQueryValidator", ()=>{
     });
 });
 
-describe("getMonthlyExpenseQueryValidator", () => {
+describe("getMonthlyExpensesQueryValidator", () => {
     async function validateQuery(query) {
         const req = { query };
 
-        for (const validator of getMonthlyExpenseQueryValidator) {
+        for (const validator of getMonthlyExpensesQueryValidator) {
             await validator.run(req);
         }
 

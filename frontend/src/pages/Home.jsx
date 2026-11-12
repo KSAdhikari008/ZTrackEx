@@ -1,8 +1,33 @@
 import { Link } from "react-router";
 import Navbar from "../component/Navbar";
 import './Home.css';
+import { useState } from "react";
+import { useEffect } from "react";
+import api from "../services/api";
 
 function Home() {
+
+  const [totalThisMonth, setTotalThisMonth] = useState(null);
+  const [isMonthlyTotalLoading, setIsMonthlyTotalLoading] = useState(true);
+  const [monthlyTotalError, setMonthlyTotalError] = useState(null);
+
+  useEffect(()=>{
+  
+    async function getMonthlySpent() {
+      try {
+        const response = await api.get('expenses/monthlyTotal');
+        setTotalThisMonth(response.data.data.totalExpenses);
+      } catch (error) {
+        console.error("Could not load monthly spending:", error);
+        setMonthlyTotalError("Unable to load monthly spending.");
+      } finally {
+        setIsMonthlyTotalLoading(false);
+      }
+    }
+
+    getMonthlySpent();
+  
+  },[]);
 
   return (
     <div className=" flex flex-col gap-2 bg-black min-h-dvh p-2 text-zinc-50 md:flex-row  ">
@@ -11,9 +36,16 @@ function Home() {
 
         <div className="monthly-expense bg-zinc-800 px-5 flex flex-col justify-center gap-1   rounded-md "> 
           <p>Total spent this month</p>
-          <div className="amount text-2xl ">$2148.30</div> 
+          <div className="amount text-2xl " aria-live="polite">
+            {isMonthlyTotalLoading
+              ? "Loading..."
+              : monthlyTotalError
+                ? <span role="alert">{monthlyTotalError}</span>
+                : `₹ ${totalThisMonth ?? "0.00"}`}
+          </div> 
           <div className="vs-lastMonth text-amber-700 "> 12% vs last month</div>
         </div>
+        
         <div className="budget-left  bg-zinc-800 px-5 flex flex-col justify-center gap-1 rounded-md ">
           <p>Budget left</p>
           <div className="amount">$651.70</div>

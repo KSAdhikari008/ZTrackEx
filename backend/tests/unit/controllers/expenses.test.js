@@ -367,6 +367,12 @@ describe("getAllExpenses", () => {
   });
 });
 
+describe("getMonthlyExpenses", () => {
+
+  test("one",()=>{
+    console.log("one");
+  })
+});
 
 describe("addExpense", ()=>{
  

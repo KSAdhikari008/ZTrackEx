@@ -19,7 +19,7 @@ export const getAllExpensesQueryValidator = [
         .toDate()
 ];
 
-export const getMonthlyExpenseQueryValidator = [
+export const getMonthlyExpensesQueryValidator = [
     query('page')
         .optional()
         .isInt({ min: 1 }).withMessage('Page must be a positive integer').bail()

@@ -1,5 +1,6 @@
-import { matchedData } from "express-validator";
+import { matchedData, Result } from "express-validator";
 import { Expense } from "../models/expense.model.js";
+import mongoose from "mongoose";
 
 export const getAllExpenses = async (req, res, next) => {
     try {
@@ -49,12 +50,12 @@ export const getAllExpenses = async (req, res, next) => {
     }
 }
 
-export const getMonthlyExpense = async (req, res, next) => {
+export const getMonthlyExpenses = async (req, res, next) => {
      try{
 
         const {page = 1, limit = 10} = matchedData(req);
         const skip = (page-1)*limit;
-
+        //NOTE add month/date param to get exp of any month not just current month.
         const now = new Date();
         const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
         const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
@@ -90,6 +91,44 @@ export const getMonthlyExpense = async (req, res, next) => {
         console.error(" Get monthly expenses error:", err);
         next(err);
      }
+}
+
+export const getMonthlyTotal = async (req, res, next) => {
+
+    try {
+        
+        const now = new Date();
+        const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+        const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+        const query = {
+            user: new mongoose.Types.ObjectId(req.user.id),
+            date: { $gte: startOfMonth, $lt: startOfNextMonth },
+        };
+        
+        const result = await Expense.aggregate([
+            {
+                $match: query
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$amount" }
+                }
+            }
+        ]);
+        
+        res.status(200).json({
+          message: "Monthly total expenses retrieved successfully",
+          data: {
+            totalExpenses: (result[0]?.total || 0) / 100
+          }
+        });
+
+    } catch (err) {
+        console.error("Get monthly total expense error:", err);
+        next(err)
+    }
+    
 }
 
 export const getExpenseById = async (req, res, next) => {
