@@ -35,28 +35,45 @@ function getMonthlyTotalErrorMessage(error) {
 
 function Home() {
 
-  const [totalThisMonth, setTotalThisMonth] = useState(null);
-  const [isMonthlyTotalLoading, setIsMonthlyTotalLoading] = useState(true);
-  const [monthlyTotalError, setMonthlyTotalError] = useState(null);
+  const [monthlyTotal, setMonthlyTotal] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [dashboardError, setErrors] = useState(null);
 
-  //NOTE write separate fns and loadin&err state for all the other dashboard data.
-  useEffect(()=>{
+  //NOTE complete success and failed req hanlding and loadin&err state for all the other dashboard data.
+  useEffect(() => {
+    let cancelled = false;
 
-    async function getMonthlySpent() {
-      try {
-        const response = await api.get('expenses/monthlyTotal');
-        setTotalThisMonth(response.data.data.totalExpenses);
-      } catch (error) {
-        console.error("Could not load monthly spending:", error);
-        setMonthlyTotalError(getMonthlyTotalErrorMessage(error));
-      } finally {
-        setIsMonthlyTotalLoading(false);
+  async function loadDashboard() {
+    try {
+      const [monthlyTotal] = await Promise.allSettled([
+        api.get("/expenses/monthlyTotal"),
+      ]);
+
+      if (!cancelled) {
+        if(monthlyTotal.status === "fulfilled"){
+
+          setMonthlyTotal(monthlyTotal.data.data.totalExpenses);
+        }else{
+          setErrors(getMonthlyTotalErrorMessage(monthlyTotal.reason));
+        }
       }
+    } catch (error) {
+      if (!cancelled){
+        setErrors(prev => ({...prev, general: error.message + " Unable to load the dashboard. Please try again."}));
+      } 
+    } finally {
+      if (!cancelled) setLoading(false);
     }
+  }
 
-    getMonthlySpent();
-  
-  },[]);
+  loadDashboard();
+
+  return () => {
+    // avoids state updatation to an unmounted component.
+    // Can happen when a user navigates away from the page before the async reponse is recieved.
+    cancelled = true; 
+  };
+  }, []);
 
   return (
     <div className=" flex flex-col gap-2 bg-black min-h-dvh p-2 text-zinc-50 md:flex-row  ">
@@ -66,11 +83,11 @@ function Home() {
         <div className="monthly-expense bg-zinc-800 px-5 flex flex-col justify-center gap-1   rounded-md "> 
           <p>Total spent this month</p>
           <div className="amount text-2xl " aria-live="polite">
-            {isMonthlyTotalLoading
+            {loading
               ? "Loading..."
-              : monthlyTotalError
-                ? <span role="alert">{monthlyTotalError}</span>
-                : `₹ ${totalThisMonth ?? "0.00"}`}
+              : dashboardError.monthlyTotalError
+                ? <span role="alert">{dashboardError.monthlyTotalError}</span>
+                : `₹ ${monthlyTotal ?? "0.00"}`}
           </div> 
           <div className="vs-lastMonth text-amber-700 "> 12% vs last month</div>
         </div>

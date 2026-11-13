@@ -29,7 +29,7 @@ function Login() {
     return <Navigate to={redirectPath} replace />;
   }
 
-  //NOTE move the error msg handling to a separate helper function like in home
+  //NOTE move the error msg handling to a separate helper function like in home 
   async function handleLogin(e) {
     e.preventDefault();
 
