@@ -36,9 +36,9 @@ app.use("/api/users", usersRouter);
 
 // 404 handler for undefined routes
 app.use((req, res, next)=>{
-  const forwardedError = new Error(`Can't find ${req.originalUrl} on this server!`);
-  forwardedError.statusCode = 404;
-  next(forwardedError);
+  const error = new Error(`Can't find ${req.originalUrl} on this server!`);
+  error.statusCode = 404;
+  next(error);
 })
 
 app.use(errorHandler);
