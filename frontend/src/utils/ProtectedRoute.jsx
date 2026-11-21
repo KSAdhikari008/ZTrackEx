@@ -14,8 +14,11 @@ function ProtectedRoute() {
   }
 
   // Fail-closed guard: only allow entry if explicitly authenticated
-  if (user.status !== "authenticated") {
+  if(user.status == "unauthenticated") {
     return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+  if(user.status == "server error"){
+    return <Navigate to="/serverError" />
   }
 
   return <Outlet />;

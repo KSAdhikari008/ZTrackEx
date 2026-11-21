@@ -27,6 +27,7 @@ function getMonthlyTotalErrorMessage(error) {
   if (status >= 500) return "The server encountered a problem. Please try again later.";
 
   if (typeof data?.message === "string" && data.message.trim()) {
+    console.log(data.message);
     return data.message;
   }
 
@@ -37,7 +38,7 @@ function Home() {
 
   const [monthlyTotal, setMonthlyTotal] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [dashboardError, setErrors] = useState(null);
+  const [dashboardError, setDashboardErrors] = useState({});
 
   //NOTE complete success and failed req hanlding and loadin&err state for all the other dashboard data.
   useEffect(() => {
@@ -45,21 +46,21 @@ function Home() {
 
   async function loadDashboard() {
     try {
-      const [monthlyTotal] = await Promise.allSettled([
+      const [monthTotal] = await Promise.allSettled([
         api.get("/expenses/monthlyTotal"),
       ]);
-
+      
       if (!cancelled) {
-        if(monthlyTotal.status === "fulfilled"){
-
-          setMonthlyTotal(monthlyTotal.data.data.totalExpenses);
+        if(monthTotal.status === "fulfilled"){          
+          setMonthlyTotal(monthTotal.value.data.data.totalExpenses);
         }else{
-          setErrors(getMonthlyTotalErrorMessage(monthlyTotal.reason));
+          console.log(monthTotal);
+          setDashboardErrors(prev => ({...prev, monthlyTotal: getMonthlyTotalErrorMessage(monthTotal.reason)}));
         }
       }
     } catch (error) {
       if (!cancelled){
-        setErrors(prev => ({...prev, general: error.message + " Unable to load the dashboard. Please try again."}));
+        setDashboardErrors(prev => ({...prev, general: error.message + " Unable to load the dashboard. Please try again."}));
       } 
     } finally {
       if (!cancelled) setLoading(false);
@@ -85,8 +86,8 @@ function Home() {
           <div className="amount text-2xl " aria-live="polite">
             {loading
               ? "Loading..."
-              : dashboardError.monthlyTotalError
-                ? <span role="alert">{dashboardError.monthlyTotalError}</span>
+              : dashboardError?.monthlyTotal
+                ? <span role="alert">{dashboardError.monthlyTotal}</span>
                 : `₹ ${monthlyTotal ?? "0.00"}`}
           </div> 
           <div className="vs-lastMonth text-amber-700 "> 12% vs last month</div>

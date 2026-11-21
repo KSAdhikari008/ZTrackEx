@@ -4,6 +4,7 @@ import Register from './pages/Register'
 import { Routes, Route } from 'react-router'
 import ProtectedRoute from './utils/ProtectedRoute';
 import Expenses from './pages/Expenses';
+import ServerError from './pages/ServerError';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/" element={<Home/>} />
                 <Route path="/expenses" element={<Expenses/>} />
             </Route>
+            <Route path='/serverError' element={<ServerError/>} />
         </Routes>
     );
 }

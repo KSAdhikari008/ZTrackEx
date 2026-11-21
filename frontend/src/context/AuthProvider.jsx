@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
         setUser({ status: "unauthenticated" });
         if (!err.response) {
           console.error("Network error while checking authentication:", err);
+          setUser({ status: "server error" })
         }
       }
     }
