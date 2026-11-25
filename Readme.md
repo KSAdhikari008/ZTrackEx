@@ -42,7 +42,7 @@
 
 | Authentication | Expense Dashboard |
 |---|---|
-| ![Login and registration layouts](UI_Layout/login_register_desktop.png) | ![Home dashboard layout](UI_Layout/3%20-%20home-page-web.png) |
+| ![Login layout](UI_Layout/login_desktop.png)<br>![Registration layout](UI_Layout/register_desktop.png) | ![Home dashboard layout](UI_Layout/3%20-%20home-page-web.png) |
 
 Additional mobile and expense layouts are available in [UI_Layout](UI_Layout/).
 
