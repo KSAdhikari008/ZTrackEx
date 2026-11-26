@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router'
 import ProtectedRoute from './utils/ProtectedRoute';
 import Expenses from './pages/Expenses';
 import ServerError from './pages/ServerError';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/expenses" element={<Expenses/>} />
             </Route>
             <Route path='/serverError' element={<ServerError/>} />
+            <Route path='*' element={<NotFound/>}/>
         </Routes>
     );
 }

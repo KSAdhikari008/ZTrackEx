@@ -46,6 +46,7 @@ Additional desktop and mobile layouts are available in [`UI_Layout`](UI_Layout/)
 - Spending-by-category and spending-over-time charts
 - Recent expense activity and advanced filtering
 - Account settings, including username and password updates
+- Review login and registration rate limits for users behind shared IPs or distributed attacks.
 
 ## Tech Stack
 

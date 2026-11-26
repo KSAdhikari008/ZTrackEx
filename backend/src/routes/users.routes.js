@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.patch('/username', updateUsername);
 router.patch('/password', updatePassword);
-router.delete('/me', authenticate, deleteUserLimiter, deleteValidator, validate, deleteUser);
+router.delete('/me', deleteUserLimiter, authenticate, deleteValidator, validate, deleteUser);
 
 
 
