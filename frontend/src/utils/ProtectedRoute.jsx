@@ -20,6 +20,9 @@ function ProtectedRoute() {
   if(user.status == "server error"){
     return <Navigate to="/serverError" />
   }
+  if(user.status === "rate limited"){
+    return <Navigate to="/serverError" replace state={{ reason: "rate-limited" }} />
+  }
 
   return <Outlet />;
 }
